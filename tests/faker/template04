@@ -1,0 +1,1 @@
+<14>{{next(date_generator)}} {{ fake.random_element(('NNNNNNNNN03', 'MMMMMMMMM28', 'jjjjjjjjj01', 'ppppppppp03ef01', 'qqqqqqqqq02', '11.11.11.11', 'QWQWQWQWQ20', 'TRTRTRTRTR01', 'prodint', 'MMMMASAD90')) }} firewall.cisco.asa: 2018-03-22T23:56:09.237067-07:00 MIMIMIMI : %ASA-111111: Teardown dynamic {{ fake.random_element(('TCP', 'UDP', 'ICMP')) }} test
