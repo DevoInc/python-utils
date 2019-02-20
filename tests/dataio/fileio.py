@@ -16,6 +16,10 @@ class TestFileIO(unittest.TestCase):
     __GZIP_FILE = "".join((os.path.dirname(os.path.abspath(__file__)),
                            os.sep, 'test_lookup.csv.gz'))
 
+    def setUp(self):
+        os.chdir("{!s}{!s}".format(os.path.dirname(os.path.abspath(__file__)),
+                                   os.sep))
+
     def test_simple_file(self):
         reader = FileReader(self.__CLEAR_FILE)
         data = []

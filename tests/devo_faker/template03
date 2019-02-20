@@ -1,1 +1,1 @@
-{{ fake.from_file("%s%stests.ds") }}
+{{ fake.from_file("tests.ds") }}
