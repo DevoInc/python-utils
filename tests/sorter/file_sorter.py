@@ -43,9 +43,11 @@ def _create_random_regex_date_file(length, rows, file_source):
 
 
 class TestSimpleSorter(unittest.TestCase):
-    __DATAFILE__ = "testData.log"
-    __DATAFILE2__ = "testData2.log"
-    __TARGETFILE__ = "outputData.log"
+    FOLDER_PATH = "{!s}{!s}".format(os.path.dirname(os.path.abspath(__file__)),
+                                    os.sep)
+    __DATAFILE__ = "{!s}testData.log".format(FOLDER_PATH)
+    __DATAFILE2__ = "{!s}testData2.log".format(FOLDER_PATH)
+    __TARGETFILE__ = "{!s}outputData.log".format(FOLDER_PATH)
 
     def __init__(self, *args, **kwargs):
         super(TestSimpleSorter, self).__init__(*args, **kwargs)
