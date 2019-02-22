@@ -1,0 +1,7 @@
+Click==7.0
+requests==2.21.0
+devo-sdk>=2,<3
+Jinja2==2.10
+psutil==5.4.8
+python-dateutil==2.7.5
+Faker==1.0.1
