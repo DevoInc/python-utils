@@ -19,7 +19,9 @@ class SyslogRawSender(BaseSender):
             for line in lines:
                 if self.probability():
                     if not self.simulation and line:
-                        self.engine.send_raw(str(line))
+                        if line[-1:] != "\n":
+                            line += "\n"
+                        self.engine.send_raw(line)
                     now = datetime.utcnow().ctime()
                     print('{0} => {1}'.format(now, str(line)))
                 else:
