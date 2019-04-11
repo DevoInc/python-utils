@@ -9,6 +9,9 @@ tests_results/*
 check_list.txt
 .tmp.gz
 
+tests/dataio/file.csv.gz
+
+
 .idea
 # Byte-compiled / optimized / DLL files
 __pycache__/
