@@ -2,7 +2,7 @@ Click==7.0
 requests==2.21.0
 pyyaml>=git+git://github.com/yaml/pyyaml@releases/tag/5.1b3
 devo-sdk>=2,<3
-Jinja2==2.10
+Jinja2>=2.10.1
 psutil==5.4.8
 python-dateutil==2.7.5
 Faker==1.0.1
