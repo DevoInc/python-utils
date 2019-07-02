@@ -99,7 +99,12 @@ def cli(**kwargs):
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
                                                 scfg.get("port", None)))
-            params.append('Tag={0}'.format(cfg.get('tag', "my.app.faker.test")))
+            params.append('Tag={0}'.format(cfg.get('tag',
+                                                   scfg.get("tag",
+                                                            "my.app.faker.test")
+                                                   )
+                                           )
+                          )
             thread = SyslogSender(engine, cfg['template'],
                                   interactive=cfg['interactive'],
                                   prob=cfg['prob'], freq=cfg['freq'],
