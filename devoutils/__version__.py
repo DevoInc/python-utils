@@ -1,7 +1,7 @@
 __description__ = 'Devo Python Library.'
 __url__ = 'http://www.devo.com'
-__version__ = "1.0.2"
+__version__ = "2.0.0"
 __author__ = 'Devo'
 __author_email__ = 'support@devo.com'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2018 Devo'
+__copyright__ = 'Copyright 2019 Devo'

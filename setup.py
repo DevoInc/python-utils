@@ -16,14 +16,14 @@ CLASSIFIERS = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.3",
-    "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-INSTALL_REQUIRES = ['devo-sdk', 'faker', 'jinja2>=2.10.1', 'psutil', 'click',
+INSTALL_REQUIRES = ['devo-sdk==3.0.2', 'faker', 'jinja2>=2.10.1', 'psutil', 'click',
                     'python-dateutil']
 CLI = ['devo-faker=devoutils.faker.scripts.faker_cli:cli']
 

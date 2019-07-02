@@ -42,7 +42,7 @@ Options:
   -ch, --chain PATH            Chain file for SSL.
   --address TEXT               address to send.
   --port TEXT                  Port to send.
-  --tag TEXT                   Tag from Logtrust.
+  --tag TEXT                   Tag from Devo.
   --simulation                 Set as simulation.
   -t, --template FILENAME      Template to send.  [required]
   -i, --interactive            Interactive mode.

@@ -9,7 +9,6 @@ class SyslogRawSender(BaseSender):
     """Generate a lot of events from/for Syslog"""
     def __init__(self, engine, template, **kwargs):
         BaseSender.__init__(self, engine, template, **kwargs)
-        self.tag = kwargs.get('tag', 'test.keep.free')
         self.kwargs = kwargs
 
     def run(self):
