@@ -25,6 +25,7 @@ class BaseSender(threading.Thread):
         self.dont_remove_microseconds = kwargs.get('dont_remove_microseconds',
                                                    False)
         self.parser = TemplateParser()
+        self.date_generator = kwargs.get('date_generator', None)
 
     def process(self, date_generator=None, **kwargs):
         """Process template"""
