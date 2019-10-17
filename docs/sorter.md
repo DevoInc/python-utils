@@ -262,5 +262,5 @@ it is not written to a file and an iterator is returned
 ## TODO
 * Include sort_stream function that receives an iterator and returns an iterator,
 the parameters would be the same as sort_file without source / destination file
-* Create writer that you send to Logtrust.
+* Create writer that you send to Devo.
 * More complex and complete tests.

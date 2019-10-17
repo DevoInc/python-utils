@@ -27,12 +27,12 @@ class BatchSender(BaseSender):
                    date_format="%Y-%m-%d %H:%M:%S.%f",
                    dont_remove_microseconds=True):
         """
-        Generates datetime objects between a start date and an end date with
+        Generates dateti
+        :param start_date:me objects between a start date and an end date with
         some given frequency,
         Some events can be piled up in the same millisecond, this happens
         sometimes with real data.
         :param frequency_ms:
-        :param start_date:
         :param end_date:
         :return:
         """

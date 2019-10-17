@@ -48,7 +48,7 @@ changes have been made between each release (or version) of the project.
 
 ##### Why should I care?
 Because software tools are for people. If you don’t care, why are you 
-contributing? Right, Logtrust pay you for it, but surely, there must be a kernel
+contributing? Right, Devo maybe pay you for it, but surely, there must be a kernel
  (ha!) of care somewhere in that lovely little brain of yours.
 
 ##### What makes a good change log?

@@ -42,13 +42,14 @@ Options:
   -ch, --chain PATH            Chain file for SSL.
   --address TEXT               address to send.
   --port TEXT                  Port to send.
-  --tag TEXT                   Tag from Logtrust.
+  --tag TEXT                   Tag from Devo.
   --simulation                 Set as simulation.
   -t, --template FILENAME      Template to send.  [required]
   -i, --interactive            Interactive mode.
+  -raw, --raw_mode             Send raw mode.
   --prob INTEGER               Probability (0-100).
-  --freq TEXT                  Frequency in seconds ("1.0-5.0": 1 sec. to
-                               5secs.).
+  --freq TEXT                  Frequency in seconds. Example:"1.0-5.0" =
+                               random time between 1 sec. to 5secs.
   --batch_mode                 Enable blatch mode, a lot of events will be
                                generated as fast as possible and written to a
                                file. The events will be generated in thetime
@@ -66,13 +67,14 @@ Options:
 The config.json file could be like this:
 ```
 {
-    "protocol": "SSL",
-    "key": "<path_to_key>.key",
-    "cert": "<path_to_cert>.crt",
-    "chain": "<path_to_chain>.crt",
-    "tag": "test.keep.free",
-    "address": "eu.elb.relay.logtrust.net",
-    "port": 443
+    "sender": {
+        "key": "<path_to_key>.key",
+        "cert": "<path_to_cert>.crt",
+        "chain": "<path_to_chain>.crt",
+        "tag": "test.keep.free",
+        "address": "eu.elb.relay.logtrust.net",
+        "port": 443
+   }
 }
 ```
 

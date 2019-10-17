@@ -31,7 +31,7 @@ def cli():
               help='Chain file for SSL.')
 @click.option('--address', help='address to send.')
 @click.option('--port', help='Port to send.')
-@click.option('--tag', help='Tag from Logtrust.')
+@click.option('--tag', help='Tag from Devo.')
 @click.option('--simulation', is_flag=True, help='Set as simulation.')
 @click.option('--template', '-t', type=click.File('r'), required=True,
               help='Template to send.')
@@ -40,8 +40,9 @@ def cli():
 @click.option('--raw_mode', '-raw', is_flag=True,
               help='Send raw mode.')
 @click.option('--prob', default=100, help='Probability (0-100).')
-@click.option('--freq', default="1-1", help='Frequency in seconds '
-                                            '("1.0-5.0": 1 sec. to 5secs.).')
+@click.option('--freq', default="1-1", help='Frequency in seconds. Example:'
+                                            '"1.0-5.0" = random time '
+                                            'between 1 sec. to 5secs.')
 @click.option('--batch_mode', is_flag=True,
               help='Enable blatch mode, a lot of events will be generated as '
                    'fast as possible and written to a file. The events will be '
@@ -88,21 +89,26 @@ def cli(**kwargs):
                 freq=cfg['freq'], date_format=cfg['date_format'],
                 dont_remove_microseconds=cfg['dont_remove_microseconds'])
         elif cfg['raw_mode']:
-            scfg = cfg['logtrust']
-            params.append('Host={0}:{1}'.format(scfg['address'], scfg['port']))
-            params.append('Tag={0}'.format(cfg['tag']))
-            thread = SyslogRawSender(engine, cfg['template'],
+            scfg = cfg['sender']
+            params.append('Host={0}:{1}'.format(scfg.get('address', None),
+                                                scfg.get("port", None)))
+            thread = SyslogRawSender(engine, cfg.get('template', None),
                                      interactive=cfg['interactive'],
-                                     prob=cfg['prob'], freq=cfg['freq'],
-                                     tag=cfg['tag'])
+                                     prob=cfg['prob'], freq=cfg['freq'])
         else:
-            scfg = cfg['logtrust']
-            params.append('Host={0}:{1}'.format(scfg['address'], scfg['port']))
-            params.append('Tag={0}'.format(cfg['tag']))
+            scfg = cfg['sender']
+            params.append('Host={0}:{1}'.format(scfg.get('address', None),
+                                                scfg.get("port", None)))
+            params.append('Tag={0}'.format(cfg.get('tag',
+                                                   scfg.get("tag",
+                                                            "my.app.faker.test")
+                                                   )
+                                           )
+                          )
             thread = SyslogSender(engine, cfg['template'],
                                   interactive=cfg['interactive'],
                                   prob=cfg['prob'], freq=cfg['freq'],
-                                  tag=cfg['tag'])
+                                  tag=cfg.get('tag', "my.app.faker.test"))
 
         params.append('Prob={0}'.format(cfg['prob']))
         params.append('Freq={0}'.format(cfg['freq']))
@@ -127,39 +133,37 @@ def cli(**kwargs):
 
 def configure(args):
     """For load configuration file/object"""
-    config = Configuration()
+
     if args.get('config'):
-        config.load_config(args.get('config'))
-    config.mix(dict(args))
+        config = Configuration(args.get('config'))
+        config.mix(dict(args))
+    else:
+        config = dict(args)
 
-    if 'freq' in config.cfg:
-        parts = config.cfg['freq'].split('-')
-        config.cfg['freq'] = (float(parts[0]), float(parts[1]))
+    if 'freq' in config.keys():
+        parts = config['freq'].split('-')
+        config['freq'] = (float(parts[0]), float(parts[1]))
 
-    config.cfg['template'] = config.cfg['template'].read()
+    config['template'] = config['template'].read()
 
     # Initialize LtSender with the config credentials but only
     # if we aren't in batch mode or simulation mode
     engine = None
-    if not (config.cfg['batch_mode'] or config.cfg['simulation']):
+    if not (config['batch_mode'] or config['simulation']):
         try:
-            if 'sender' in config.cfg:
-                engine = Sender.from_config(config.get()['sender'])
-            else:
-                config.cfg['sender'] = {
-                    'key' : config.cfg['key'],
-                    'chain' : config.cfg['chain'],
-                    'cert' : config.cfg['cert'],
-                    'address' : config.cfg['address'],
-                    'port' : config.cfg['port']
-                }
-                engine = Sender.from_config(config.cfg)
+            if "sender" not in config.keys():
+                config['sender'] = {'key': config.get('key', None),
+                                    'chain': config.get('chain', None),
+                                    'cert': config.get('cert', None),
+                                    'address': config.get('address', None),
+                                    'port': config.get('port', 443)}
+
+            engine = Sender(config=config.get('sender'))
         except Exception as error:
             print_error(error, show_help=False)
             print_error("Error when loading devo sender configuration",
                         show_help=True)
-
-    return engine, config.get()
+    return engine, config
 
 
 def print_error(error, show_help=False, stop=True):

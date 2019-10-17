@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2019-07-02
+#### Changed
+ * Modified base devo-sender from version 2.x to >=3.0.1
+ * Faker cli for adapt to new devo-sdk config files
+ 
+#### Fixed
+ * Problems with Sender raw sender in CLI removing tag
+ * Problems with call key when can not exists
+
 ## [1.0.2] - 2019-04-24
 #### Security
  * Updated requirements for high problems of security

@@ -1,6 +1,6 @@
 [![relese-next Build Status](https://travis-ci.com/DevoInc/python-utils.svg?branch=master)](https://travis-ci.com/DevoInc/python-utils) [![LICENSE](https://img.shields.io/dub/l/vibe-d.svg)](https://github.com/DevoInc/python-utils/blob/master/LICENSE)
 
-[![wheel](https://img.shields.io/badge/wheel-yes-brightgreen.svg)](https://pypi.org/project/devo-utils/) [![version](https://img.shields.io/badge/version-1.0.2-blue.svg)](https://pypi.org/project/devo-utils/) [![python](https://img.shields.io/badge/python-3.3%20%7C%203.4%20%7C%203.5%20%7C%203.6%20%7C%203.7-blue.svg)](https://pypi.org/project/devo-utils/)
+[![wheel](https://img.shields.io/badge/wheel-yes-brightgreen.svg)](https://pypi.org/project/devo-utils/) [![version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://pypi.org/project/devo-utils/) [![python](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue.svg)](https://pypi.org/project/devo-utils/)
 
 
 # Devo Python Utils

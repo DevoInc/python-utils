@@ -14,10 +14,11 @@ class SyslogSender(BaseSender):
     def run(self):
         """Run function for cli or call function"""
         while True:
-            lines = self.process().split('\n')
+            lines = self.process(date_generator=self.date_generator).split('\n')
             for line in lines:
                 if self.probability():
-                    self.engine.send(tag=self.tag, msg=str(line))
+                    if not self.simulation:
+                        self.engine.send(tag=self.tag, msg=str(line))
                     now = datetime.utcnow().ctime()
                     print('{0} => {1}'.format(now, str(line)))
                 else:
