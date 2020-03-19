@@ -1,7 +1,7 @@
 Click==7.0
 requests==2.21.0
 pyyaml>=git+git://github.com/yaml/pyyaml@releases/tag/5.1b3
-devo-sdk==3.0.2
+devo-sdk==3.2.0
 Jinja2>=2.10.1
 psutil==5.6.1
 python-dateutil==2.8.0

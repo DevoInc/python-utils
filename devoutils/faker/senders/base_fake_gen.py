@@ -6,7 +6,7 @@ import time
 from .template_parser import TemplateParser
 
 
-class BaseSender(threading.Thread):
+class BaseFakeGen(threading.Thread):
     """Base provider main class"""
     template = None
     freq = None
@@ -24,6 +24,7 @@ class BaseSender(threading.Thread):
         self.simulation = kwargs.get('simulation', False)
         self.dont_remove_microseconds = kwargs.get('dont_remove_microseconds',
                                                    False)
+        self.verbose = kwargs.get('verbose', False)
         self.parser = TemplateParser()
         self.date_generator = kwargs.get('date_generator', None)
 
@@ -57,3 +58,4 @@ class BaseSender(threading.Thread):
                 # Do something
                 pass
             self.wait()
+

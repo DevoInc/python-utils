@@ -31,7 +31,7 @@ config.json file and makes the process interactive.
 If you use ```devo-faker --help``` you can see all the available options.
 Here is the help command result:
 ```
-Usage: devo-faker [OPTIONS]
+Usage: faker_cli.py [OPTIONS]
 
   Perform query by query string
 
@@ -43,7 +43,12 @@ Options:
   --address TEXT               address to send.
   --port TEXT                  Port to send.
   --tag TEXT                   Tag from Devo.
-  --simulation                 Set as simulation.
+  --file_name TEXT             File name to store events. If file name exist
+                               will only store the events in a file. Can be
+                               used with batch mode to set the file where
+                               store the batch events
+  --simulation                 Set as simulation. Shows the event in the
+                               console, but do not send it
   -t, --template FILENAME      Template to send.  [required]
   -i, --interactive            Interactive mode.
   -raw, --raw_mode             Send raw mode.
@@ -61,6 +66,8 @@ Options:
   --dont_remove_microseconds   (batch mode) By default the microseconds are
                                removed from the generated dates by doing
                                date[:-3] this flags prevents it
+  --verbose                    Verbose mode shows the events created in the
+                               console when sending dta into Devo.
   --help                       Show this message and exit.
 ```
 
@@ -175,7 +182,6 @@ Reusing the eventdate in other parts of the log:
 
 ## TODO
 - Add more useful methods to the jinja collection
-- Documentate news methods in Faker
+- Document news methods in Faker
 - Provide use examples in script
 
-For more info talk with José Ramón
