@@ -3,7 +3,7 @@ import unittest
 import re
 import os
 from dateutil import parser
-from devoutils.faker import BatchSender
+from devoutils.faker import BatchFakeGen
 from devoutils.faker import TemplateParser
 
 
@@ -42,10 +42,10 @@ class TestTemplateParser(unittest.TestCase):
         end_date = parser.parse("01-01-2018 00:05:00")
         result = self.parser.process(text,
                                      date_generator=
-                                     BatchSender.date_range(start_date,
-                                                            end_date,
-                                                            (1, 10),
-                                                            50))
+                                     BatchFakeGen.date_range(start_date,
+                                                             end_date,
+                                                             (1, 10),
+                                                             50))
         self.assertTrue('test' in result)
 
 

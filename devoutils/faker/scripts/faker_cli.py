@@ -10,8 +10,8 @@ from dateutil import parser
 # ------------------------------------------------------------------------------
 from devo.sender import Sender
 from devo.common import Configuration
-from devoutils.faker import BatchSender, FileSender, SyslogSender, \
-    SyslogRawSender
+from devoutils.faker import BatchFakeGen, FileFakeGen, SyslogFakeGen, \
+    SyslogRawFakeGen, SimulationFakeGen
 
 
 @click.group()
@@ -32,7 +32,13 @@ def cli():
 @click.option('--address', help='address to send.')
 @click.option('--port', help='Port to send.')
 @click.option('--tag', help='Tag from Devo.')
-@click.option('--simulation', is_flag=True, help='Set as simulation.')
+@click.option('--file_name', help='File name to store events. If file name '
+              'exist will only store the events in a file. Can be used '
+              'with batch mode to set the file where store the batch '
+              'events')
+@click.option('--simulation', is_flag=True,
+              help='Set as simulation. Shows the event in the console, '
+                   'but do not send it')
 @click.option('--template', '-t', type=click.File('r'), required=True,
               help='Template to send.')
 @click.option('--interactive', '-i', is_flag=True,
@@ -61,6 +67,9 @@ def cli():
               help='(batch mode) By default the microseconds are removed '
                    'from the generated dates by doing date[:-3] '
                    'this flags prevents it')
+@click.option('--verbose', is_flag=True,
+              help='Verbose mode shows the events created in the console '
+                   'when sending dta into Devo.')
 def cli(**kwargs):
     """Perform query by query string"""
     engine, cfg = configure(kwargs)
@@ -73,10 +82,9 @@ def cli(**kwargs):
     try:
         if cfg['simulation']:
             params.append('Simulation')
-
-            thread = FileSender(cfg['template'],
-                                interactive=cfg['interactive'],
-                                prob=cfg['prob'], freq=cfg['freq'])
+            thread = SimulationFakeGen(cfg['template'],
+                                       interactive=cfg['interactive'],
+                                       prob=cfg['prob'], freq=cfg['freq'])
         elif cfg['batch_mode']:
             params.append('Batch mode')
             start_date = parser.parse(cfg['date_range'][0])
@@ -84,17 +92,26 @@ def cli(**kwargs):
             click.echo('Generating events between {} and {}'.format(start_date,
                                                                     end_date),
                        file=sys.stderr)
-            thread = BatchSender(
+            thread = BatchFakeGen(
                 cfg['template'], start_date, end_date, prob=cfg['prob'],
                 freq=cfg['freq'], date_format=cfg['date_format'],
-                dont_remove_microseconds=cfg['dont_remove_microseconds'])
+                dont_remove_microseconds=cfg['dont_remove_microseconds'],
+                file_name=cfg.get('file_name', None))
         elif cfg['raw_mode']:
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
                                                 scfg.get("port", None)))
-            thread = SyslogRawSender(engine, cfg.get('template', None),
-                                     interactive=cfg['interactive'],
-                                     prob=cfg['prob'], freq=cfg['freq'])
+            thread = SyslogRawFakeGen(engine, cfg.get('template', None),
+                                      interactive=cfg['interactive'],
+                                      prob=cfg['prob'], freq=cfg['freq'],
+                                      verbose=cfg['verbose'])
+        elif cfg.get('file_name', None):
+            params.append('File Name {}'.format(cfg['file_name']))
+            thread = FileFakeGen(cfg['template'],
+                                 interactive=cfg['interactive'],
+                                 prob=cfg['prob'], freq=cfg['freq'],
+                                 file_name=cfg['file_name'],
+                                 verbose=cfg['verbose'])
         else:
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
@@ -105,10 +122,11 @@ def cli(**kwargs):
                                                    )
                                            )
                           )
-            thread = SyslogSender(engine, cfg['template'],
-                                  interactive=cfg['interactive'],
-                                  prob=cfg['prob'], freq=cfg['freq'],
-                                  tag=cfg.get('tag', "my.app.faker.test"))
+            thread = SyslogFakeGen(engine, cfg['template'],
+                                   interactive=cfg['interactive'],
+                                   prob=cfg['prob'], freq=cfg['freq'],
+                                   tag=cfg.get('tag', "my.app.faker.test"),
+                                   verbose=cfg['verbose'])
 
         params.append('Prob={0}'.format(cfg['prob']))
         params.append('Freq={0}'.format(cfg['freq']))
@@ -149,7 +167,8 @@ def configure(args):
     # Initialize LtSender with the config credentials but only
     # if we aren't in batch mode or simulation mode
     engine = None
-    if not (config['batch_mode'] or config['simulation']):
+    if not (config['batch_mode'] or config['simulation']
+            or config.get('file_name', None)):
         try:
             if "sender" not in config.keys():
                 config['sender'] = {'key': config.get('key', None),
@@ -175,3 +194,6 @@ def print_error(error, show_help=False, stop=True):
     if stop:
         sys.exit(1)
 
+
+if __name__ == '__main__':
+    cli()

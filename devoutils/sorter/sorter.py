@@ -125,6 +125,7 @@ class Sorter:
         transform = kwargs.get('transform', lambda x: x)
 
         for file in src:
+            reader = None
             if src_type == FILES:
                 reader = self.get_reader(file, kwargs)
                 self.__skip_header_rows(kwargs, reader)
@@ -155,6 +156,7 @@ class Sorter:
         data = []
 
         for file in src:
+            reader = None
             if src_type == FILES:
                 reader = self.get_reader(file, kwargs)
                 self.__skip_header_rows(kwargs, reader)

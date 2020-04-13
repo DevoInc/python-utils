@@ -23,6 +23,7 @@ CLASSIFIERS = [
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+
 INSTALL_REQUIRES = ['click==7.1.1',
                     'requests==2.23.0',
                     'PyYAML==5.3.1',
@@ -31,7 +32,6 @@ INSTALL_REQUIRES = ['click==7.1.1',
                     'psutil==5.7.0',
                     'python-dateutil==2.8.1',
                     'Faker==4.0.2']
-
 CLI = ['devo-faker=devoutils.faker.scripts.faker_cli:cli']
 
 
