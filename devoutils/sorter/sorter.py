@@ -9,7 +9,8 @@ import json
 from types import GeneratorType
 from collections import Iterable
 from psutil import virtual_memory
-from devoutils.fileio import FileReader, FileWriter, FileSortedJoin
+from devoutils.fileio import FileReader, FileWriter
+from .file_sorted_join import FileSortedJoin
 from .cmp_compatible import cmp
 
 DEFAULT_PERC_MEM = 0.4

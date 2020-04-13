@@ -13,8 +13,8 @@ class FileSender(BaseSender):
     def run(self):
         """Run function for cli or call function"""
         with open("safestream.log", "a") as file:
-            lines = self.process().split('\n')
             while True:
+                lines = self.process().split('\n')
                 for line in lines:
                     if self.probability():
                         file.write(line + "\n")

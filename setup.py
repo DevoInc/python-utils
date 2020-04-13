@@ -23,8 +23,15 @@ CLASSIFIERS = [
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-INSTALL_REQUIRES = ['devo-sdk>=3.0.3,<4', 'faker', 'jinja2>=2.10.1', 'psutil',
-                    'click', 'python-dateutil']
+INSTALL_REQUIRES = ['click==7.1.1',
+                    'requests==2.23.0',
+                    'PyYAML==5.3.1',
+                    'devo-sdk==3.2.5',
+                    'Jinja2==2.11.1',
+                    'psutil==5.7.0',
+                    'python-dateutil==2.8.1',
+                    'Faker==4.0.2']
+
 CLI = ['devo-faker=devoutils.faker.scripts.faker_cli:cli']
 
 
