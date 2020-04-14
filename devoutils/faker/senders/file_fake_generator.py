@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """File Sender provider"""
-from .realtime_fake_gen import RealtimeFakeGen
+from .realtime_fake_generator import RealtimeFakeGenerator
 from datetime import datetime
 
 
-class FileFakeGen(RealtimeFakeGen):
+class FileFakeGenerator(RealtimeFakeGenerator):
     """Generate a lot of events from file"""
     def __init__(self, template, **kwargs):
-        RealtimeFakeGen.__init__(self, None, template, **kwargs)
+        RealtimeFakeGenerator.__init__(self, None, template, **kwargs)
         self.last_flush = int(datetime.now().timestamp())
         self.file_name = kwargs.get('file_name', "safestream.log")
         self.f = None

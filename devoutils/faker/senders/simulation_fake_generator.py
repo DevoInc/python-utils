@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """File Sender provider"""
-from .realtime_fake_gen import RealtimeFakeGen
+from .realtime_fake_generator import RealtimeFakeGenerator
 
 
-class SimulationFakeGen(RealtimeFakeGen):
+class SimulationFakeGenerator(RealtimeFakeGenerator):
     """Generate a lot of events from file"""
     def __init__(self, template, **kwargs):
-        RealtimeFakeGen.__init__(self, None, template, **kwargs)
+        RealtimeFakeGenerator.__init__(self, None, template, **kwargs)
         self.verbose = True
 
     def run(self):

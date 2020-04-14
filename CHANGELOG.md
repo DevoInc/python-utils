@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.0.0] - 2019-10-17
 #### Changed
- * Modified base devo-sender from version 3.0.x to 3.2.5
+ * Modified base devo-sender from version 3.0.x to 3.3.0
  * Faker cli add verbose mode to show the events in the console
  * Add file_name param to define a file to store events in batch mode or 
  for testing, store in a file but do not send it.

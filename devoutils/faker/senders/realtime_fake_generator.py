@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """realtime base sender provider"""
-from .base_fake_gen import BaseFakeGen
+from .base_fake_generator import BaseFakeGenerator
 from datetime import datetime
 
 
-class RealtimeFakeGen(BaseFakeGen):
+class RealtimeFakeGenerator(BaseFakeGenerator):
 
     def __init__(self, engine, template, **kwargs):
-        BaseFakeGen.__init__(self, engine, template, **kwargs)
+        BaseFakeGenerator.__init__(self, engine, template, **kwargs)
 
     def realtime_iteration(self, write_function):
         while True:

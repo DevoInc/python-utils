@@ -5,10 +5,10 @@ import random
 import sys
 import click
 
-from .base_fake_gen import BaseFakeGen
+from .base_fake_generator import BaseFakeGenerator
 
 
-class BatchFakeGen(BaseFakeGen):
+class BatchFakeGenerator(BaseFakeGenerator):
     """
     Generates a lot of events in a single batch without any waits, it
     supports generating events from the past
@@ -17,7 +17,7 @@ class BatchFakeGen(BaseFakeGen):
     GENERATION_ENDED_TOKEN = '###END###'
 
     def __init__(self, template, start_date, end_date, **kwargs):
-        BaseFakeGen.__init__(self, None, template, **kwargs)
+        BaseFakeGenerator.__init__(self, None, template, **kwargs)
 
         self._start_date = start_date
         self._end_date = end_date
@@ -61,7 +61,7 @@ class BatchFakeGen(BaseFakeGen):
             next_date = start_date + datetime.timedelta(milliseconds=millis)
 
             if next_date > end_date:
-                yield BatchFakeGen.GENERATION_ENDED_TOKEN
+                yield BatchFakeGenerator.GENERATION_ENDED_TOKEN
             else:
                 if dont_remove_microseconds:
                     yield next_date.strftime(date_format)
@@ -82,7 +82,7 @@ class BatchFakeGen(BaseFakeGen):
             while True:
                 lines = self.process(date_generator=date_generator).split('\n')
                 for line in lines:
-                    if BatchFakeGen.GENERATION_ENDED_TOKEN in line:
+                    if BatchFakeGenerator.GENERATION_ENDED_TOKEN in line:
                         print("Wrote {} events in {}".format(counter,
                                                              self.file_name),
                               file=sys.stdout)

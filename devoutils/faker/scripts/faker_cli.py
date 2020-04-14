@@ -10,8 +10,8 @@ from dateutil import parser
 # ------------------------------------------------------------------------------
 from devo.sender import Sender
 from devo.common import Configuration
-from devoutils.faker import BatchFakeGen, FileFakeGen, SyslogFakeGen, \
-    SyslogRawFakeGen, SimulationFakeGen
+from devoutils.faker import BatchFakeGenerator, FileFakeGenerator, \
+    SyslogFakeGenerator, SyslogRawFakeGenerator, SimulationFakeGenerator
 
 
 @click.group()
@@ -82,9 +82,9 @@ def cli(**kwargs):
     try:
         if cfg['simulation']:
             params.append('Simulation')
-            thread = SimulationFakeGen(cfg['template'],
-                                       interactive=cfg['interactive'],
-                                       prob=cfg['prob'], freq=cfg['freq'])
+            thread = SimulationFakeGenerator(cfg['template'],
+                                             interactive=cfg['interactive'],
+                                             prob=cfg['prob'], freq=cfg['freq'])
         elif cfg['batch_mode']:
             params.append('Batch mode')
             start_date = parser.parse(cfg['date_range'][0])
@@ -92,7 +92,7 @@ def cli(**kwargs):
             click.echo('Generating events between {} and {}'.format(start_date,
                                                                     end_date),
                        file=sys.stderr)
-            thread = BatchFakeGen(
+            thread = BatchFakeGenerator(
                 cfg['template'], start_date, end_date, prob=cfg['prob'],
                 freq=cfg['freq'], date_format=cfg['date_format'],
                 dont_remove_microseconds=cfg['dont_remove_microseconds'],
@@ -101,17 +101,17 @@ def cli(**kwargs):
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
                                                 scfg.get("port", None)))
-            thread = SyslogRawFakeGen(engine, cfg.get('template', None),
-                                      interactive=cfg['interactive'],
-                                      prob=cfg['prob'], freq=cfg['freq'],
-                                      verbose=cfg['verbose'])
+            thread = SyslogRawFakeGenerator(engine, cfg.get('template', None),
+                                            interactive=cfg['interactive'],
+                                            prob=cfg['prob'], freq=cfg['freq'],
+                                            verbose=cfg['verbose'])
         elif cfg.get('file_name', None):
             params.append('File Name {}'.format(cfg['file_name']))
-            thread = FileFakeGen(cfg['template'],
-                                 interactive=cfg['interactive'],
-                                 prob=cfg['prob'], freq=cfg['freq'],
-                                 file_name=cfg['file_name'],
-                                 verbose=cfg['verbose'])
+            thread = FileFakeGenerator(cfg['template'],
+                                       interactive=cfg['interactive'],
+                                       prob=cfg['prob'], freq=cfg['freq'],
+                                       file_name=cfg['file_name'],
+                                       verbose=cfg['verbose'])
         else:
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
@@ -122,11 +122,11 @@ def cli(**kwargs):
                                                    )
                                            )
                           )
-            thread = SyslogFakeGen(engine, cfg['template'],
-                                   interactive=cfg['interactive'],
-                                   prob=cfg['prob'], freq=cfg['freq'],
-                                   tag=cfg.get('tag', "my.app.faker.test"),
-                                   verbose=cfg['verbose'])
+            thread = SyslogFakeGenerator(engine, cfg['template'],
+                                         interactive=cfg['interactive'],
+                                         prob=cfg['prob'], freq=cfg['freq'],
+                                         tag=cfg.get('tag', "my.app.faker.test"),
+                                         verbose=cfg['verbose'])
 
         params.append('Prob={0}'.format(cfg['prob']))
         params.append('Freq={0}'.format(cfg['freq']))

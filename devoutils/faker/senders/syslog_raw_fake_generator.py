@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Syslog raw sender provider"""
-from .realtime_fake_gen import RealtimeFakeGen
+from .realtime_fake_generator import RealtimeFakeGenerator
 
 
-class SyslogRawFakeGen(RealtimeFakeGen):
+class SyslogRawFakeGenerator(RealtimeFakeGenerator):
     """Generate a lot of events from/for Syslog"""
     def __init__(self, engine, template, **kwargs):
-        RealtimeFakeGen.__init__(self, engine, template, **kwargs)
+        RealtimeFakeGenerator.__init__(self, engine, template, **kwargs)
         self.kwargs = kwargs
 
     def send_raw(self, message):

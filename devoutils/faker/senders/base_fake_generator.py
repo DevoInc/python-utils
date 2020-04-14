@@ -6,7 +6,7 @@ import time
 from .template_parser import TemplateParser
 
 
-class BaseFakeGen(threading.Thread):
+class BaseFakeGenerator(threading.Thread):
     """Base provider main class"""
     template = None
     freq = None
