@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from devoutils.fileio import FileReader, FileWriter, FileSortedJoin
+from devoutils.fileio import FileReader, FileWriter
 
 
 class TestFileIO(unittest.TestCase):

@@ -2,11 +2,10 @@
 ## Overview
 Fake event generator
 
-Generates fake events on realtime or on batch mode (**NEW**). Use the realtime
-mode to generate realtime events to send them to DEVO or the
-batch mode to generate a lot of events at once and save them to a file.
+Generates fake events on realtime or on batch mode. Use the realtime
+mode to generate realtime events to send or save them, or the
+batch mode to generate a lot of events at once and save/send the events.
 
-There is a small tutorial for the new batch mode below.
 
 ## Features
 - Generate logs in batch mode and dump them to a file
@@ -16,8 +15,6 @@ There is a small tutorial for the new batch mode below.
 - Frequency as range in seconds for use random behaviour
 - Mode interactive to decide when to launch the next iteration
 - Mode simulation to send to a file
-- Tested compatibility for python 3.x series
-- Unit tests for use in python 3.x
 
 ## CLI
 The command line allow us to call a template with a configuration in one
