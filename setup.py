@@ -31,7 +31,8 @@ INSTALL_REQUIRES = ['click==7.1.1',
                     'Jinja2==2.11.1',
                     'psutil==5.7.0',
                     'python-dateutil==2.8.1',
-                    'Faker==4.0.2']
+                    'Faker==4.0.2',
+                    'pycron==3.0.0']
 CLI = ['devo-faker=devoutils.faker.scripts.faker_cli:cli']
 
 
