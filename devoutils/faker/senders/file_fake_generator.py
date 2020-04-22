@@ -6,13 +6,13 @@ from datetime import datetime
 
 class FileFakeGenerator(RealtimeFakeGenerator):
     """Generate a lot of events from file"""
-    def __init__(self, template, **kwargs):
-        RealtimeFakeGenerator.__init__(self, None, template, **kwargs)
+    def __init__(self, template=None, **kwargs):
+        RealtimeFakeGenerator.__init__(self, template=template, **kwargs)
         self.last_flush = int(datetime.now().timestamp())
         self.file_name = kwargs.get('file_name', "safestream.log")
         self.f = None
 
-    def write_row(self, message):
+    def write_row(self, message=None):
         self.f.write(message)
         self.f.write('\n')
         now = int(datetime.now().timestamp())
@@ -24,4 +24,4 @@ class FileFakeGenerator(RealtimeFakeGenerator):
     def run(self):
         """Run function for cli or call function"""
         with open(self.file_name, "a") as self.f:
-            self.realtime_iteration(self.write_row)
+            self.realtime_iteration(write_function=self.write_row)

@@ -1,11 +1,10 @@
 # Devo Faker
-## Overview
+### Overview
 Fake event generator
 
 Generates fake events on realtime or on batch mode. Use the realtime
 mode to generate realtime events to send or save them, or the
 batch mode to generate a lot of events at once and save/send the events.
-
 
 ## Features
 - Generate logs in batch mode and dump them to a file
@@ -15,6 +14,72 @@ batch mode to generate a lot of events at once and save/send the events.
 - Frequency as range in seconds for use random behaviour
 - Mode interactive to decide when to launch the next iteration
 - Mode simulation to send to a file
+
+
+
+* Script usage
+    * [Batch fake generator]()
+    * [File fake generator]()
+    * [Realtime fake generator]()
+    * [Simulation fake generator]()
+    * [Syslog fake generator]()
+    * [Syslog raw fake generator]()
+
+* [Terminal CLI usage](#CLI)
+
+
+## Script usage
+
+#### Initializing base generator
+
+Devo-utils has several types of generators, and there are also several ways to initialize them, but 
+all use BaseFakeGenerator as base class, soo you have common variables 
+(Below is any flag that is in two or more fake generators)
+
+Variable descriptions:
+
++ _engine_ **(_Sender_)**: Normal, a Sender object from devo-sdk, but you can use any object with a "send" function l
+ike Sender class
++ _template_ **(_string_)**: Jinja2 template loaded as str
++ Simple probability and frequency: With this option you have one probability and frequency all time fixed.
+    + _probability_ **(_integer_)**: Send probability: in the moment of send data, you can have probability from 0 to 100 
+of send the event. 
+This can make sending events somewhat more random, creating a more realistic graph, instead of sending 10 
+events every second, with a probability of 70 (%) there will be variability. 
+    + _frequency_ **(_tuple_)**: Tuple of integers with the minimum and maximum frequency, random, to send events:
+        + **Example:** (1,2) means that events will be sent with a random frequency of between 1 and 2 seconds.
+        + **Example:** (0.1, 1) decimals can be used
+        + **The frequency is calculated in each send**, therefore if you put: (0,10) a random number (in seconds) 
+        between 0 and 10 will be obtained, for example 6. It will wait 6 seconds and an event will be sent, and will 
+        recalculate. For example, 10 in the next iteration = 10sg will be waited and the event will be sent (Always 
+        taking into consideration the probability, of course), and it will be recalculated again and again each 
+        iteration.
++ Complex probability and frequency:
+    + With this option you can create rules to change the probability and frequency based on time periods, to create 
+    false data more in line with a possible reality, for example: more data at peak times, at work hours, or on 
+    weekends, etc.
+    + _time_rules_ (_list_): list of objects, each objects its a rule. Each object has 3 values -> 
+    `{"rule": "", "probability": 1, "frequency": (1,10)}`
+        + rule **(_string_)**: With CRON syntax you can create rules to change the probability and frequency of 
+        shipments. These rules can be executed once (For example "0 8 * * *") or they can be rules that include ranges 
+        (For example "* 8-18 * * *) you can even use a default like" * * * * * " .
+        
+          The priority, regarding rules that affect the same time range, will always be in order of appearance, that is, the 
+first rule in the list is more priority than the following ones, if they share time periods. Therefore, in the example 
+below, the second rule will only apply from 9:00 to 18:00, since the first rule also affects from 8:00 to 9:00.
+
+          If it doesn't find a rule that applies for a moment, it will continue with the last one that was executed
+        + probability **(_integer_)**: Same values as explained above
+        + frequency **(_tuple_)**: Same values as explained above
+        + **example:** time_rules=[{"rule": "0 0-9 * * *", "probability": 90, "frequency": (0.5, 2)}, 
+        {"cron": "0 18 * * *", "probability": 30, "frequency": (5, 10)}]
+        
++ interactive **(_bool_)**: interactive moode wait for your interaction to make the next event submission
++ simulation **(_bool_)**: If true, the events are not sent or written, they are only shown on the screen as if
+ they had been done
++ verbose **(_bool_)**: verbose mode
++ date_generator **(_object_)**: date_generator for use next() in templates, default is `str(datetime.now())`.
+
 
 ## CLI
 The command line allow us to call a template with a configuration in one
@@ -175,10 +240,3 @@ Reusing the eventdate in other parts of the log:
 {%- set eventdate = next(date_generator) -%}
 {{  eventdate }} {{ fake.ipv4() }} WEndpoint_Profile 1234567890 1 0 mac_address=10acbdefg01,ip_address={{ fake.ipv4() }},static_ip=t,hostname=DEVOHOSTNAME,username={{ 'USER%s' %fake.int(0, 9) }},login_status={{ fake.random_element({'ACCEPT': 0.4, 'REJECT': 0.1, 'TIMEOUT': 0.8}) }},error_code={{ fake.random_element((0, 106)) }}
 ```
-
-
-## TODO
-- Add more useful methods to the jinja collection
-- Document news methods in Faker
-- Provide use examples in script
-

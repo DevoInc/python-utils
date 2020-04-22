@@ -6,10 +6,11 @@ from datetime import datetime
 
 class RealtimeFakeGenerator(BaseFakeGenerator):
 
-    def __init__(self, engine, template, **kwargs):
-        BaseFakeGenerator.__init__(self, engine, template, **kwargs)
+    def __init__(self, engine=None, template=None, **kwargs):
+        BaseFakeGenerator.__init__(self, engine=engine, template=template,
+                                   **kwargs)
 
-    def realtime_iteration(self, write_function):
+    def realtime_iteration(self, write_function=None):
         while True:
             lines = self.process(date_generator=self.date_generator).split('\n')
             for line in lines:
