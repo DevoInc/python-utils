@@ -16,8 +16,11 @@ batch mode to generate a lot of events at once and save/send the events.
 - Mode simulation to send to a file
 
 ## Index - Fast reference
+
+
 * [Jinja2 (Templates) documentation](https://jinja.palletsprojects.com/en/2.11.x/)
 * [Generic variables](#Initializing base generator)
+* [Custom providers](#Custom providers in script mode)
 * [Batch fake generator](faker/batch.md)
 * [File fake generator](faker/file.md)
 * [Realtime fake generator](faker/realtime.md)
@@ -28,6 +31,8 @@ batch mode to generate a lot of events at once and save/send the events.
 
 
 ## Script usage
+
+The specific use of each generator is in its respective file, in the above list. Here you have common uses
 
 #### Initializing base generator
 
@@ -118,6 +123,68 @@ With the same template we can make more script examples:
                                      "frequency": (4, 10)}
                                 ])
 
+
+## Custom providers in script mode
+
+In the fake generator, and in the templates you use, you can add any function / provider to generate data that you need, let's see a simple example
+
+    from devoutils.faker import SyslogFakeGenerator
+    from random import random # We import random function from python base
+    ....
+    con = Sender(config=config)
+    with open("test_template.jinja2", 'r') as myfile:
+        template = myfile.read()
+        
+    custom_providers = {"random" : random} # We need send all functions in a dictionary "name" -> function 
+
+    sfg = SyslogFakeGenerator(engine=con, 
+                              template=template, 
+                              simulation=True,
+                              probability=75,
+                              frequency=(0.1, 5)
+                              verbose=True,
+                              providers=custom_providers)
+    sfg.start()
+
+And now we can use random function in template:
+
+    {#- Log -#}
+    {%- set type = fake.random_element(["post", "get"]) %}
+    {%- set nextdate = next(date_generator) -%}
+    {{ nextdate }} receiving {{ type }} request. Request duration: {{ random() }}
+
+
+You can import full modules or one full class, and use it in Jinja like you use in python:
+
+    from devoutils.faker import SyslogFakeGenerator
+    import random # Now we import full random module
+    ....
+    con = Sender(config=config)
+    with open("test_template.jinja2", 'r') as myfile:
+        template = myfile.read()
+        
+    custom_providers = {"random" : random} 
+
+    sfg = SyslogFakeGenerator(engine=con, 
+                              template=template, 
+                              simulation=True,
+                              probability=75,
+                              frequency=(0.1, 5)
+                              verbose=True,
+                              providers=custom_providers)
+    sfg.start()
+
+And now we can use all module in template:
+    
+    #- Log -#}
+    {%- set type = fake.random_element(["post", "get"]) %}
+    {%- set nextdate = next(date_generator) -%}
+    {{ nextdate }} receiving {{ type }} request. Request duration: {{ random.random() }}. Request size {{ random.randint(0,100) }}
+
+You can send the number of own providers that you want, you just have create/import the functions, put them 
+in a dictionary and send them to "providers". 
+
+    providers={"random": random, "wifi_ssd": random_ssd_provider, "names": random_names_provider}
 
 
 

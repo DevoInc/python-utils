@@ -41,7 +41,7 @@ You can use sources files, clonning the project too:
 
 You have specific documentation in _[docs](docs)_ folder for each part of SDK:
 * [Faker: fake data](docs/faker.md)
-* [File IO](docs/io/fileio.md)
+* [File IO](docs/fileio.md)
 * [Sorting data](docs/sorter.md)
 
 
