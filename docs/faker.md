@@ -67,7 +67,8 @@ events every second, with a probability of 70 (%) there will be variability.
     + With this option you can create rules to change the probability and frequency based on time periods, to create 
     false data more in line with a possible reality, for example: more data at peak times, at work hours, or on 
     weekends, etc.
-    + _time_rules_ (_list_): list of objects, each objects its a rule. Each object has 3 values -> 
+    + _time_rules_ (_list_): list of objects, each objects its a rule. This value its not available as flag in CLI 
+    mode, you need add values to the config file. Each object has 3 values -> 
     `{"rule": "", "probability": 1, "frequency": (1,10)}`
         + rule **(_string_)**: With CRON syntax you can create rules to change the probability and frequency of 
         shipments. These rules can be executed once (For example "0 8 * * *") or they can be rules that include ranges 

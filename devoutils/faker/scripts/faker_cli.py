@@ -41,14 +41,17 @@ def cli():
                    'but do not send it')
 @click.option('--template', '-t', type=click.File('r'), required=True,
               help='Template to send.')
+@click.option('--providers', '-p', type=click.File('r'), required=False,
+              help='File with custom providers dict.')
 @click.option('--interactive', '-i', is_flag=True,
               help='Interactive mode.')
 @click.option('--raw_mode', '-raw', is_flag=True,
               help='Send raw mode.')
-@click.option('--prob', default=100, help='Probability (0-100).')
-@click.option('--freq', default="1-1", help='Frequency in seconds. Example:'
-                                            '"1.0-5.0" = random time '
-                                            'between 1 sec. to 5secs.')
+@click.option('--probability', default=100, help='Probability (0-100).')
+@click.option('--frequency', default="(1,1)", help='Frequency in seconds. '
+                                                   'Example: '
+                                                   '"1.0-5.0" = random time '
+                                                   'between 1 sec. to 5secs.')
 @click.option('--batch_mode', is_flag=True,
               help='Enable blatch mode, a lot of events will be generated as '
                    'fast as possible and written to a file. The events will be '
@@ -73,6 +76,18 @@ def cli():
 def cli(**kwargs):
     """Perform query by query string"""
     engine, cfg = configure(kwargs)
+    providers = None
+
+    try:
+        if "providers" in cfg.keys():
+            import importlib
+
+            providers_module = importlib.import_module(cfg.get("providers"))
+            providers = providers_module.get_providers()
+    except Exception as error:
+        print_error("Error when loading Providers", show_help=False, stop=False)
+        print_error(error, show_help=False, stop=True)
+
     params = []
 
     click.echo("» Press Ctrl+C to stop the process «", file=sys.stderr)
@@ -84,7 +99,9 @@ def cli(**kwargs):
             params.append('Simulation')
             thread = SimulationFakeGenerator(cfg['template'],
                                              interactive=cfg['interactive'],
-                                             prob=cfg['prob'], freq=cfg['freq'])
+                                             probability=cfg['probability'],
+                                             frequency=cfg['frequency'],
+                                             providers=providers)
         elif cfg['batch_mode']:
             params.append('Batch mode')
             start_date = parser.parse(cfg['date_range'][0])
@@ -93,24 +110,31 @@ def cli(**kwargs):
                                                                     end_date),
                        file=sys.stderr)
             thread = BatchFakeGenerator(
-                cfg['template'], start_date, end_date, prob=cfg['prob'],
-                freq=cfg['freq'], date_format=cfg['date_format'],
+                cfg['template'], start_date, end_date,
+                probability=cfg['probability'],
+                frequency=cfg['frequency'],
+                date_format=cfg['date_format'],
                 dont_remove_microseconds=cfg['dont_remove_microseconds'],
-                file_name=cfg.get('file_name', None))
+                file_name=cfg.get('file_name', None),
+                providers=providers)
         elif cfg['raw_mode']:
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
                                                 scfg.get("port", None)))
             thread = SyslogRawFakeGenerator(engine, cfg.get('template', None),
                                             interactive=cfg['interactive'],
-                                            prob=cfg['prob'], freq=cfg['freq'],
+                                            probability=cfg['probability'],
+                                            frequency=cfg['frequency'],
+                                            providers=providers,
                                             verbose=cfg['verbose'])
         elif cfg.get('file_name', None):
             params.append('File Name {}'.format(cfg['file_name']))
             thread = FileFakeGenerator(cfg['template'],
                                        interactive=cfg['interactive'],
-                                       prob=cfg['prob'], freq=cfg['freq'],
+                                       probability=cfg['probability'],
+                                       frequency=cfg['frequency'],
                                        file_name=cfg['file_name'],
+                                       providers=providers,
                                        verbose=cfg['verbose'])
         else:
             scfg = cfg['sender']
@@ -124,12 +148,15 @@ def cli(**kwargs):
                           )
             thread = SyslogFakeGenerator(engine, cfg['template'],
                                          interactive=cfg['interactive'],
-                                         prob=cfg['prob'], freq=cfg['freq'],
-                                         tag=cfg.get('tag', "my.app.faker.test"),
+                                         probability=cfg['probability'],
+                                         frequency=cfg['frequency'],
+                                         providers=providers,
+                                         tag=cfg.get("tag",
+                                                     "my.app.faker.test"),
                                          verbose=cfg['verbose'])
 
-        params.append('Prob={0}'.format(cfg['prob']))
-        params.append('Freq={0}'.format(cfg['freq']))
+        params.append('probability={0}'.format(cfg['probability']))
+        params.append('frequency={0}'.format(cfg['frequency']))
         click.echo("» {0} «\n".format(', '.join(params)), file=sys.stderr)
 
         thread.daemon = True
@@ -153,18 +180,20 @@ def configure(args):
     """For load configuration file/object"""
 
     if args.get('config'):
-        config = Configuration(args.get('config'))
+        config = Configuration(path=args.get('config'))
         config.mix(dict(args))
     else:
         config = dict(args)
 
-    if 'freq' in config.keys():
-        parts = config['freq'].split('-')
-        config['freq'] = (float(parts[0]), float(parts[1]))
+    if 'frequency' in config.keys() and isinstance(config.get("frequency"),
+                                                   (str, bytes)):
+        config['frequency'] = tuple([float(x)
+                                     for x
+                                     in config.get("frequency").split("-")])
 
     config['template'] = config['template'].read()
 
-    # Initialize LtSender with the config credentials but only
+    # Initialize devo.sender with the config credentials but only
     # if we aren't in batch mode or simulation mode
     engine = None
     if not (config['batch_mode'] or config['simulation']
