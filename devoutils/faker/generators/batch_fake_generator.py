@@ -17,6 +17,7 @@ class BatchFakeGenerator(BaseFakeGenerator):
     GENERATION_ENDED_TOKEN = '###END###'
 
     def __init__(self, template=None, start_date=None, end_date=None, **kwargs):
+
         BaseFakeGenerator.__init__(self, template=template, **kwargs)
 
         self._start_date = start_date
@@ -28,7 +29,8 @@ class BatchFakeGenerator(BaseFakeGenerator):
             else "eventbatch.log"
 
     @staticmethod
-    def date_range(start_date=None, end_date=None, frequency=None, probability=None,
+    def date_range(start_date=None, end_date=None, frequency=None,
+                   probability=None,
                    date_format="%Y-%m-%d %H:%M:%S.%f",
                    dont_remove_microseconds=True):
         """

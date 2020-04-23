@@ -1,5 +1,11 @@
 ## Batch fake generator
 
+### Class
+
+* [BatchFakeGenerator](../../devoutils/faker/generators/batch_fake_generator.py)
+
+### Doc
+
 Sometimes we want to test a new application but we only have one
 small file with some sample events. In this case we want to be able
 to generate much more data from the original sample.
@@ -43,32 +49,6 @@ Another very useful command to generate more realistic data is the following:
 {{ fake.random_element({"%ASA-654321": 0.8, "%ASA-123456": 0.18, "%ASA-111111": 0.02}) }}
 ```
 It allows to specify the probability of each element. 
-
-The faker library has many data providers but they have to be instantiated explicitly in the devo-faker 
-TemplateParser class:
-
-```
-from .providers.file_data_source_provider import FileDataSourceProvider
-from .providers.numbers_provider import NumbersProvider
-from faker.providers.internet import Provider as InternetProvider
-
-class TemplateParser:
-
-    fake = None
-
-    def __init__(self):
-        self.fake = Faker()
-        self.fake.add_provider(FileDataSourceProvider)
-        self.fake.add_provider(NumbersProvider)
-        # Ips networks emails etc..
-        self.fake.add_provider(InternetProvider)
-```
-
-Right now lt-faker is configured to use two custom providers defined inside 
-lt-faker **FileDataSourceProvider** and **NumbersProvider** and a third provider from the third
-party faker library: **InternetProvider**. If you want to add more add them there, the providers 
-of the faker library ar located in the faker.providers.* path and there are a lot of them!.
-
 
 Now that the template is done you can generate the event file with the following command:
 

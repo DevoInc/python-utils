@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 """realtime base sender provider"""
-from .base_fake_generator import BaseFakeGenerator
 from datetime import datetime
+from .base_fake_generator import BaseFakeGenerator
 
 
 class RealtimeFakeGenerator(BaseFakeGenerator):
-
+    """Realtime fake data generation"""
     def __init__(self, engine=None, template=None, **kwargs):
+        """Realtime fake data generation"""
         BaseFakeGenerator.__init__(self, engine=engine, template=template,
                                    **kwargs)
 
     def realtime_iteration(self, write_function=None):
+        """Realtime function for parse and send/show generated data"""
         while True:
-            lines = self.process(date_generator=self.date_generator).split('\n')
+            lines = self.process().split('\n')
             for line in lines:
                 if self.probability():
                     if not self.simulation:

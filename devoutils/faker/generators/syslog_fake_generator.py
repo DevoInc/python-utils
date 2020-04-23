@@ -11,7 +11,7 @@ class SyslogFakeGenerator(RealtimeFakeGenerator):
         self.tag = kwargs.get('tag', 'test.keep.free')
 
     def run(self):
-        """Run function for cli or call function"""
+        """Run function for cli or call function to send the data"""
         self.realtime_iteration(
             write_function=
             lambda message: self.engine.send(tag=self.tag, msg=str(message)))

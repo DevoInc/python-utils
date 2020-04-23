@@ -4,7 +4,7 @@ from .realtime_fake_generator import RealtimeFakeGenerator
 
 
 class SimulationFakeGenerator(RealtimeFakeGenerator):
-    """Generate a lot of events from file"""
+    """Class to manage secure simulations of faker"""
     def __init__(self, template=None, **kwargs):
         RealtimeFakeGenerator.__init__(self, template=template, **kwargs)
         self.verbose = True

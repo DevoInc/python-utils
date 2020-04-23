@@ -42,7 +42,17 @@ You can use sources files, clonning the project too:
 You have specific documentation in _[docs](docs)_ folder for each part of SDK:
 * [Faker: fake data](docs/faker.md)
 * [File IO](docs/fileio.md)
-* [Sorting data](docs/sorter.md)
+* [Sorting data](docs/sorter.md)If you wrap a line with the block creator
+
+{% - set .... -%}
+
+Faker will not treat that line as a send line, if a variable is created without the hyphens, for example:
+
+{% set ....%}
+
+Faker will believe that it is a line to send, so you have to keep this in mind
+
+And examples in `examples` folder.
 
 
 ## Contributing

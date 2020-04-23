@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """File Sender provider"""
-from .realtime_fake_generator import RealtimeFakeGenerator
 from datetime import datetime
+from .realtime_fake_generator import RealtimeFakeGenerator
 
 
 class FileFakeGenerator(RealtimeFakeGenerator):
@@ -10,18 +10,19 @@ class FileFakeGenerator(RealtimeFakeGenerator):
         RealtimeFakeGenerator.__init__(self, template=template, **kwargs)
         self.last_flush = int(datetime.now().timestamp())
         self.file_name = kwargs.get('file_name', "safestream.log")
-        self.f = None
+        self.file = None
 
     def write_row(self, message=None):
-        self.f.write(message)
-        self.f.write('\n')
+        """Write row to file"""
+        self.file.write(message)
+        self.file.write('\n')
         now = int(datetime.now().timestamp())
         # flush every 5 secs
         if now - self.last_flush > 5:
             self.last_flush = now
-            self.f.flush()
+            self.file.flush()
 
     def run(self):
         """Run function for cli or call function"""
-        with open(self.file_name, "a") as self.f:
+        with open(self.file_name, "a") as self.file:
             self.realtime_iteration(write_function=self.write_row)

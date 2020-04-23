@@ -17,17 +17,22 @@ batch mode to generate a lot of events at once and save/send the events.
 
 ## Index - Fast reference
 
-
 * [Jinja2 (Templates) documentation](https://jinja.palletsprojects.com/en/2.11.x/)
 * [Generic variables](#Initializing base generator)
+* [Devo-utils providers](#Devo-utils providers)
 * [Custom providers](#Custom providers in script mode)
+* [Third party providers](#Third party providers)
+* [Important clarification in Jinja2](#Important clarification in Jinja2)
+
+#### Usage
+
 * [Batch fake generator](faker/batch.md)
 * [File fake generator](faker/file.md)
 * [Realtime fake generator](faker/realtime.md)
 * [Simulation fake generator](faker/simulation.md)
 * [Syslog fake generator](faker/syslog.md#syslog fake generator)
 * [Syslog raw fake generator](faker/syslog.md#raw syslog fake generator)
-* [Terminal CLI usage](#CLI)
+* [Terminal/Shell CLI usage](faker/shellcli.md)
 
 
 ## Script usage
@@ -123,6 +128,35 @@ With the same template we can make more script examples:
                                      "frequency": (4, 10)}
                                 ])
 
+## Devo-utils providers
+
+
+The faker library has many data providers but they have to be instantiated explicitly in the devoutils.faker
+TemplateParser class:
+
+```
+from .providers.file_data_source_provider import FileDataSourceProvider
+from .providers.numbers_provider import NumbersProvider
+from faker.providers.internet import Provider as InternetProvider
+
+class TemplateParser:
+
+    fake = None
+
+    def __init__(self):
+        self.fake = Faker()
+        self.fake.add_provider(FileDataSourceProvider)
+        self.fake.add_provider(NumbersProvider)
+        # Ips networks emails etc..
+        self.fake.add_provider(InternetProvider)
+```
+
+Right now lt-faker is configured to use two providers defined inside 
+**FileDataSourceProvider** and **NumbersProvider** and a third provider from the third
+party faker library: **InternetProvider**. If you want to add more add them there, the providers 
+of the faker library ar located in the faker.providers.* path and there are a lot of them!.
+
+You can use now in a template with `{{ fake.ipv4() }}`, `{{ fake.int(1, 65000) }}`
 
 ## Custom providers in script mode
 
@@ -186,71 +220,24 @@ in a dictionary and send them to "providers".
 
     providers={"random": random, "wifi_ssd": random_ssd_provider, "names": random_names_provider}
 
+## Third party providers
+In the official Python Faker documentation you have a list of the providers included in the base package, 
+and a list of providers created by other people:
+
+* [Standar providers](https://faker.readthedocs.io/en/stable/providers.html)
+* [Localized providers](https://faker.readthedocs.io/en/stable/locales.html#localized-providers)
+* [Community providers](https://faker.readthedocs.io/en/stable/communityproviders.html)
 
 
-## CLI
-The command line allow us to call a template with a configuration in one
-command, for example:
-```
-devo-faker -t template --config config.json -i
-```
-This command uses the template indicated with the configuration inside the
-config.json file and makes the process interactive.
+## Important clarification in Jinja2
 
-If you use ```devo-faker --help``` you can see all the available options.
-Here is the help command result:
-```
-Usage: faker_cli.py [OPTIONS]
+If you wrap a line with the block creator
 
-  Perform query by query string
+    {% - set .... -%}
 
-Options:
-  --config PATH                JSON File with the required configuration.
-  -k, --key PATH               Key file for SSL.
-  -c, --cert PATH              Cert file for SSL.
-  -ch, --chain PATH            Chain file for SSL.
-  --address TEXT               address to send.
-  --port TEXT                  Port to send.
-  --tag TEXT                   Tag from Devo.
-  --file_name TEXT             File name to store events. If file name exist
-                               will only store the events in a file. Can be
-                               used with batch mode to set the file where
-                               store the batch events
-  --simulation                 Set as simulation. Shows the event in the
-                               console, but do not send it
-  -t, --template FILENAME      Template to send.  [required]
-  -i, --interactive            Interactive mode.
-  -raw, --raw_mode             Send raw mode.
-  --prob INTEGER               Probability (0-100).
-  --freq TEXT                  Frequency in seconds. Example:"1.0-5.0" =
-                               random time between 1 sec. to 5secs.
-  --batch_mode                 Enable blatch mode, a lot of events will be
-                               generated as fast as possible and written to a
-                               file. The events will be generated in thetime
-                               range specified by the --date_range option
-  --date_range <TEXT TEXT>...  batch mode: Date range where the logs will be
-                               generated, default: the last 24 hours
-  --date_format TEXT           (batch mode) Format of the generated dates.
-                               default: "%Y-%m-%d %H:%M:%S.%f"
-  --dont_remove_microseconds   (batch mode) By default the microseconds are
-                               removed from the generated dates by doing
-                               date[:-3] this flags prevents it
-  --verbose                    Verbose mode shows the events created in the
-                               console when sending dta into Devo.
-  --help                       Show this message and exit.
-```
+Faker will not treat that line as a send line, if a variable is created without the hyphens, for example:
 
-The config.json file could be like this:
-```
-{
-    "sender": {
-        "key": "<path_to_key>.key",
-        "cert": "<path_to_cert>.crt",
-        "chain": "<path_to_chain>.crt",
-        "tag": "test.keep.free",
-        "address": "eu.elb.relay.logtrust.net",
-        "port": 443
-   }
-}
-```
+    {% set .... %}
+
+Faker will believe that it is a line to send, so you have to keep this in mind
 
