@@ -20,13 +20,13 @@ class TemplateParser:
         self.fake.add_provider(InternetProvider)
         self.template = template
         self.providers = {} if providers is None else providers
-        self.date_generator = TemplateParser.null_date_generator() \
+        self.date_generator = TemplateParser.null_date_generator \
             if date_generator is None else date_generator
 
     @staticmethod
     def null_date_generator():
         """Generate now date"""
-        yield str(datetime.now())
+        return str(datetime.now())
 
     def process(self, date_generator=None, **kwargs):
         """Procces template, parsing it"""
