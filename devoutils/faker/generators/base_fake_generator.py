@@ -35,7 +35,6 @@ class BaseFakeGenerator(threading.Thread):
 
         threading.Thread.__init__(self)
         self.engine = engine
-        self.template = str(template)
 
         if kwargs.get('time_rules', None) is not None:
             self.time_rules = kwargs.get("time_rules")
@@ -53,14 +52,14 @@ class BaseFakeGenerator(threading.Thread):
         self.interactive = kwargs.get('interactive', False)
         self.simulation = kwargs.get('simulation', False)
         self.verbose = kwargs.get('verbose', False)
-        self.parser = TemplateParser(providers=kwargs.get('providers', {}),
+        self.parser = TemplateParser(template=str(template),
+                                     providers=kwargs.get('providers', {}),
                                      date_generator=kwargs.get('date_generator',
                                                                None))
 
     def process(self, date_generator=None, **kwargs):
         """Process template"""
-        return self.parser.process(template=self.template,
-                                   date_generator=date_generator,
+        return self.parser.process(date_generator=date_generator,
                                    **kwargs)
 
     def wait(self):

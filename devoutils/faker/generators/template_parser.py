@@ -12,12 +12,13 @@ class TemplateParser:
     """Parser for templates, using jinja2 and Faker"""
     fake = None
 
-    def __init__(self, providers=None, date_generator=None):
+    def __init__(self, template=None, providers=None, date_generator=None):
         self.fake = Faker()
         self.fake.add_provider(FileDataSourceProvider)
         self.fake.add_provider(NumbersProvider)
         # Ips networks emails etc..
         self.fake.add_provider(InternetProvider)
+        self.template = template
         self.providers = {} if providers is None else providers
         self.date_generator = TemplateParser.null_date_generator() \
             if date_generator is None else date_generator
@@ -27,9 +28,9 @@ class TemplateParser:
         """Generate now date"""
         yield str(datetime.now())
 
-    def process(self, text=None, date_generator=None, **kwargs):
+    def process(self, date_generator=None, **kwargs):
         """Procces template, parsing it"""
-        template = Template(text)
+        template = Template(self.template)
 
         if date_generator is None:
             date_generator = self.date_generator

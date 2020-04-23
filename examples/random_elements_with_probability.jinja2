@@ -1,0 +1,3 @@
+{%- set type = fake.random_element(["post", "get"]) %}
+{%- set nextdate = next(date_generator) -%}
+{{ nextdate }} receiving {{ type }} request. Result: {{ fake.random_element(choices()) }}
