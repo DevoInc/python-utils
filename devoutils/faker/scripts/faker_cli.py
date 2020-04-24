@@ -3,6 +3,7 @@
 import datetime
 import time
 import sys
+import os
 import click
 from dateutil import parser
 
@@ -48,7 +49,7 @@ def cli():
 @click.option('--raw_mode', '-raw', is_flag=True,
               help='Send raw mode.')
 @click.option('--probability', default=100, help='Probability (0-100).')
-@click.option('--frequency', default="(1,1)", help='Frequency in seconds. '
+@click.option('--frequency', default="1-1", help='Frequency in seconds. '
                                                    'Example: '
                                                    '"1.0-5.0" = random time '
                                                    'between 1 sec. to 5secs.')
@@ -80,10 +81,14 @@ def cli(**kwargs):
 
     try:
         if "providers" in cfg.keys():
-            import importlib
-
-            providers_module = importlib.import_module(cfg.get("providers"))
-            providers = providers_module.get_providers()
+            provcfg = cfg.get("providers")
+            import importlib.util
+            spec = importlib.util.spec_from_file_location(provcfg.get("module"),
+                                                          os.path.join(provcfg.get("path"), provcfg.get("module") + ".py"))
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            get_providers = getattr(module, provcfg.get("getter"))
+            providers = get_providers()
     except Exception as error:
         print_error("Error when loading Providers", show_help=False, stop=False)
         print_error(error, show_help=False, stop=True)
@@ -180,7 +185,7 @@ def configure(args):
     """For load configuration file/object"""
 
     if args.get('config'):
-        config = Configuration(path=args.get('config'))
+        config = Configuration(path=args.get('config'), section="faker")
         config.mix(dict(args))
     else:
         config = dict(args)

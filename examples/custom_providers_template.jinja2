@@ -1,5 +1,4 @@
 {%- set type = fake.random_element(["post", "get"]) %}
-{%- set nextdate = next(date_generator) -%}
-{%- if type == "post" -%} {{ nextdate }} receiving {{ type }} request. Request duration: {{ random.random() }}. Request size {{ random.randint(0,100) }}
-{%- else -%}{{ nextdate }} Receiving super get request. Request result: {{ random.choice(choices()) }}
+{%- if type == "post" -%} {{ date_generator() }} receiving {{ type }} request. Request duration: {{ random.random() }}. Request size {{ random.randint(0,100) }}
+{%- else -%}{{ date_generator() }} Receiving super get request. Request result: {{ random.choice(choices()) }}
 {%- endif -%}
