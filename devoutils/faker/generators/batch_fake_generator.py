@@ -16,7 +16,8 @@ class BatchFakeGenerator(BaseFakeGenerator):
 
     GENERATION_ENDED_TOKEN = '###END###'
 
-    def __init__(self, template=None, start_date=None, end_date=None, **kwargs):
+    def __init__(self, template=None, start_date=None, end_date=None,
+                 **kwargs):
 
         BaseFakeGenerator.__init__(self, template=template, **kwargs)
 
@@ -54,7 +55,8 @@ class BatchFakeGenerator(BaseFakeGenerator):
         idx = 0
         while True:
 
-            millis_increment = random.uniform(frequency[0], frequency[1]) * 1000
+            millis_increment = random.uniform(frequency[0],
+                                              frequency[1]) * 1000
 
             # Add some randomness to the event generation with
             # the --probability argument

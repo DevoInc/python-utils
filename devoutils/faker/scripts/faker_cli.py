@@ -50,13 +50,13 @@ def cli():
               help='Send raw mode.')
 @click.option('--probability', default=100, help='Probability (0-100).')
 @click.option('--frequency', default="1-1", help='Frequency in seconds. '
-                                                   'Example: '
-                                                   '"1.0-5.0" = random time '
-                                                   'between 1 sec. to 5secs.')
+                                                 'Example: '
+                                                 '"1.0-5.0" = random time '
+                                                 'between 1 sec. to 5secs.')
 @click.option('--batch_mode', is_flag=True,
               help='Enable blatch mode, a lot of events will be generated as '
-                   'fast as possible and written to a file. The events will be '
-                   'generated in thetime range specified by the --date_'
+                   'fast as possible and written to a file. The events will be'
+                   ' generated in thetime range specified by the --date_'
                    'range option')
 @click.option('--date_range', type=(str, str),
               default=(str(datetime.datetime.now() -
@@ -83,14 +83,17 @@ def cli(**kwargs):
         if "providers" in cfg.keys():
             provcfg = cfg.get("providers")
             import importlib.util
-            spec = importlib.util.spec_from_file_location(provcfg.get("module"),
-                                                          os.path.join(provcfg.get("path"), provcfg.get("module") + ".py"))
+            spec = importlib.util.spec_from_file_location(
+                provcfg.get("module"),
+                os.path.join(provcfg.get("path"),
+                             provcfg.get("module") + ".py"))
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             get_providers = getattr(module, provcfg.get("getter"))
             providers = get_providers()
     except Exception as error:
-        print_error("Error when loading Providers", show_help=False, stop=False)
+        print_error("Error when loading Providers", show_help=False,
+                    stop=False)
         print_error(error, show_help=False, stop=True)
 
     params = []
@@ -145,11 +148,11 @@ def cli(**kwargs):
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
                                                 scfg.get("port", None)))
-            params.append('Tag={0}'.format(cfg.get('tag',
-                                                   scfg.get("tag",
-                                                            "my.app.faker.test")
-                                                   )
-                                           )
+            params.append('Tag={0}'
+                          .format(cfg.get('tag',
+                                          scfg.get("tag", "my.app.faker.test")
+                                          )
+                                  )
                           )
             thread = SyslogFakeGenerator(engine, cfg['template'],
                                          interactive=cfg['interactive'],
@@ -178,7 +181,7 @@ def cli(**kwargs):
         click.echo('\nReceived keyboard interrupt, quitting threads.\n')
 
 # Utils
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 
 
 def configure(args):

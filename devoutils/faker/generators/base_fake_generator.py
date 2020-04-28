@@ -26,7 +26,7 @@ class BaseFakeGenerator(threading.Thread):
             :param probability (int): Fixed shipping probability
             from 0 to 100(%)
             :param interactive (bool): Interactive mode
-            :param simulation (bool): Simulation mode, not send or write if true
+            :param simulation (bool): Simulation mode, not send/write if true
             :param verbose (bool): Verbose mode
             :param date_generator (object): Alternative date generator
             for templates
@@ -54,8 +54,8 @@ class BaseFakeGenerator(threading.Thread):
         self.verbose = kwargs.get('verbose', False)
         self.parser = TemplateParser(template=str(template),
                                      providers=kwargs.get('providers', {}),
-                                     date_generator=kwargs.get('date_generator',
-                                                               None))
+                                     date_generator=
+                                     kwargs.get('date_generator', None))
 
     def process(self, date_generator=None, **kwargs):
         """Process template"""
