@@ -5,11 +5,40 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [3.0.0] - 2019-10-17
+#### Added 
+ * Faker
+     * Faker time periods for probability and frequency
+     * SimulationGenerator
+     * New providers
+     * New and splitted documentation of use
+     * Examples for scripts and CLI shell
+     * Generators/Faker now accept custom providers, custom functions 
+     from base python or custom scripts for use in templates
+     * CLI Shell has now all necessary flags for use all generators 
+ 
 #### Changed
- * Modified base devo-sender from version 3.0.x to 3.3.0
- * Faker cli add verbose mode to show the events in the console
- * Add file_name param to define a file to store events in batch mode or 
- for testing, store in a file but do not send it.
+ * General
+    * Modified base devo-sender from version 3.0.x to 3.3.0
+    * Update dependencies to a new majors versions
+    * Set dependencies to fixed versions (more maintenance, but much more security and reliability)
+ * Sorter
+    * file_sorted_join moved from devoutils.sorter to devoutils.fileio
+    * Remove Python 2 compatibility
+ * Faker
+    * Faker cli add verbose mode to show the events in the console
+    * Add file_name param to define a file to store events in batch mode or 
+     for testing, store in a file but do not send it.
+    * Generator template are moved for Template
+    * Generator date_generator are moved for Template
+    * Generators name changed, example: BatchSender for BatchFakerGenerator
+    * Now you can make functions callable in each line of Faker Jinja2 Template
+    * null_date_generator (Default date generator) isn't a generator now, its a normal function
+    * Template.process() now not create new DateGenerator in each call
+    * Numbers_providers has PEP8 variable names
+    * `freq` var/flag in all code are now `frequency`
+    * `prob` var/flag in all code are now `probability`
+    * CLI Shell --config file now require all vars in "faker" object, and all vars for Sender in "sender" object
+
 
 ## [2.0.0] - 2019-07-02
 #### Changed
