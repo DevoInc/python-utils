@@ -46,8 +46,7 @@ class TestTemplateParser(unittest.TestCase):
 
         template_parser = TemplateParser(template=text)
         result = \
-            template_parser.process(text,
-                                    date_generator=
+            template_parser.process(date_generator=
                                     BatchFakeGenerator.date_range(start_date,
                                                                   end_date,
                                                                   (1, 10),
