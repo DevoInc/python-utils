@@ -1,12 +1,10 @@
 # Devo Faker
-## Overview
+### Overview
 Fake event generator
 
-Generates fake events on realtime or on batch mode (**NEW**). Use the realtime
-mode to generate realtime events to send them to DEVO or the
-batch mode to generate a lot of events at once and save them to a file.
-
-There is a small tutorial for the new batch mode below.
+Generates fake events on realtime or on batch mode. Use the realtime
+mode to generate realtime events to send or save them, or the
+batch mode to generate a lot of events at once and save/send the events.
 
 ## Features
 - Generate logs in batch mode and dump them to a file
@@ -16,115 +14,125 @@ There is a small tutorial for the new batch mode below.
 - Frequency as range in seconds for use random behaviour
 - Mode interactive to decide when to launch the next iteration
 - Mode simulation to send to a file
-- Tested compatibility for python 3.x series
-- Unit tests for use in python 3.x
 
-## CLI
-The command line allow us to call a template with a configuration in one
-command, for example:
-```
-devo-faker -t template --config config.json -i
-```
-This command uses the template indicated with the configuration inside the
-config.json file and makes the process interactive.
+## Index - Fast reference
 
-If you use ```devo-faker --help``` you can see all the available options.
-Here is the help command result:
-```
-Usage: devo-faker [OPTIONS]
+* [Jinja2 (Templates) documentation](https://jinja.palletsprojects.com/en/2.11.x/)
+* [Generic variables](#Initializing base generator)
+* [Devo-utils providers](#Devo-utils providers)
+* [Custom providers](#Custom providers in script mode)
+* [Third party providers](#Third party providers)
+* [Important clarification in Jinja2](#Important clarification in Jinja2)
 
-  Perform query by query string
+#### Usage
 
-Options:
-  --config PATH                JSON File with the required configuration.
-  -k, --key PATH               Key file for SSL.
-  -c, --cert PATH              Cert file for SSL.
-  -ch, --chain PATH            Chain file for SSL.
-  --address TEXT               address to send.
-  --port TEXT                  Port to send.
-  --tag TEXT                   Tag from Devo.
-  --simulation                 Set as simulation.
-  -t, --template FILENAME      Template to send.  [required]
-  -i, --interactive            Interactive mode.
-  -raw, --raw_mode             Send raw mode.
-  --prob INTEGER               Probability (0-100).
-  --freq TEXT                  Frequency in seconds. Example:"1.0-5.0" =
-                               random time between 1 sec. to 5secs.
-  --batch_mode                 Enable blatch mode, a lot of events will be
-                               generated as fast as possible and written to a
-                               file. The events will be generated in thetime
-                               range specified by the --date_range option
-  --date_range <TEXT TEXT>...  batch mode: Date range where the logs will be
-                               generated, default: the last 24 hours
-  --date_format TEXT           (batch mode) Format of the generated dates.
-                               default: "%Y-%m-%d %H:%M:%S.%f"
-  --dont_remove_microseconds   (batch mode) By default the microseconds are
-                               removed from the generated dates by doing
-                               date[:-3] this flags prevents it
-  --help                       Show this message and exit.
-```
+* [Batch fake generator](faker/batch.md)
+* [File fake generator](faker/file.md)
+* [Realtime fake generator](faker/realtime.md)
+* [Simulation fake generator](faker/simulation.md)
+* [Syslog fake generator](faker/syslog.md#syslog fake generator)
+* [Syslog raw fake generator](faker/syslog.md#raw syslog fake generator)
+* [Terminal/Shell CLI usage](faker/shellcli.md)
 
-The config.json file could be like this:
-```
-{
-    "sender": {
-        "key": "<path_to_key>.key",
-        "cert": "<path_to_cert>.crt",
-        "chain": "<path_to_chain>.crt",
-        "tag": "test.keep.free",
-        "address": "eu.elb.relay.logtrust.net",
-        "port": 443
-   }
-}
-```
 
-## Batch mode tutorial
+## Script usage
 
-Sometimes we want to test a new application but we only have one
-small file with some sample events. In this case we want to be able
-to generate much more data from the original sample.
+The specific use of each generator is in its respective file, in the above list. Here you have common uses
 
-The batch mode allows to generate events between two arbitrary dates as fast 
-as possible. The events will be dumped to the standard output and then you can
-redirect it to a file or somewhere else
+#### Initializing base generator
 
-First we want to take the sample events and create a template from them. For
-example, if we have these sample events:
+Devo-utils has several types of generators, and there are also several ways to initialize them, but 
+all use BaseFakeGenerator as base class, soo you have common variables 
+(Below is any flag that is in two or more fake generators)
 
-```
-<14>2018-03-22T23:56:09.237-07:00 ABCDEFGHI01 firewall.cisco_asa: 2018-03-22T23:56:09.237067-07:00 : %ASA-123456: Teardown dynamic UDP translation from inside:123.123.123.123/00001 to outside:111.111.111.111/11111 duration 0:02:32
-<14>2018-03-22T23:56:09.076-07:00 ABCDEFGHI02 firewall.cisco_asa: 2018-03-22T23:56:09.076432-07:00 : %ASA-654321: Built inbound UDP connection 1234567890 for outside:123.123.123.123/00001 (111.111.111.111/00001)(LOCAL\Chocolatero, Paquito) to inside:1.1.1.1/11111 (0.0.0.0/11111) (Chocolatero, Paquito)
-```
+Variable descriptions:
 
-We have to identify the fields where we want to introduce some variation. In this
-case we will generate different datetimes, hostnames, protocols, ips and ports. To
-do that lt-faker integrates a library called faker that has many methods to generate
-common data patterns such as street addresses, ips, etc..
++ _engine_ **(_Sender_)**: Normal, a Sender object from devo-sdk, but you can use any object with a "send" function l
+ike Sender class
++ _template_ **(_string_)**: Jinja2 template loaded as str
++ Simple probability and frequency: With this option you have one probability and frequency all time fixed.
+    + _probability_ **(_integer_)**: Send probability: in the moment of send data, you can have probability from 0 to 100 
+of send the event. 
+This can make sending events somewhat more random, creating a more realistic graph, instead of sending 10 
+events every second, with a probability of 70 (%) there will be variability. 
+    + _frequency_ **(_tuple_)**: Tuple of integers with the minimum and maximum frequency, random, to send events:
+        + **Example:** (1,2) means that events will be sent with a random frequency of between 1 and 2 seconds.
+        + **Example:** (0.1, 1) decimals can be used
+        + **The frequency is calculated in each send**, therefore if you put: (0,10) a random number (in seconds) 
+        between 0 and 10 will be obtained, for example 6. It will wait 6 seconds and an event will be sent, and will 
+        recalculate. For example, 10 in the next iteration = 10sg will be waited and the event will be sent (Always 
+        taking into consideration the probability, of course), and it will be recalculated again and again each 
+        iteration.
++ Complex probability and frequency:
+    + With this option you can create rules to change the probability and frequency based on time periods, to create 
+    false data more in line with a possible reality, for example: more data at peak times, at work hours, or on 
+    weekends, etc.
+    + _time_rules_ (_list_): list of objects, each objects its a rule. This value its not available as flag in CLI 
+    mode, you need add values to the config file. Each object has 3 values -> 
+    `{"rule": "", "probability": 1, "frequency": (1,10)}`
+        + rule **(_string_)**: With CRON syntax you can create rules to change the probability and frequency of 
+        shipments. These rules can be executed once (For example "0 8 * * *") or they can be rules that include ranges 
+        (For example "* 8-18 * * *) you can even use a default like" * * * * * " .
+        
+          The priority, regarding rules that affect the same time range, will always be in order of appearance, that is, the 
+first rule in the list is more priority than the following ones, if they share time periods. Therefore, in the example 
+below, the second rule will only apply from 9:00 to 18:00, since the first rule also affects from 8:00 to 9:00.
 
-The final template looks like this:
+          If it doesn't find a rule that applies for a moment, it will continue with the last one that was executed
+        + probability **(_integer_)**: Same values as explained above
+        + frequency **(_tuple_)**: Same values as explained above
+        + **example:** time_rules=[{"rule": "0 0-9 * * *", "probability": 90, "frequency": (0.5, 2)}, 
+        {"cron": "0 18 * * *", "probability": 30, "frequency": (5, 10)}]
+        
++ interactive **(_bool_)**: interactive moode wait for your interaction to make the next event submission
++ simulation **(_bool_)**: If true, the events are not sent or written, they are only shown on the screen as if
+ they had been done
++ verbose **(_bool_)**: verbose mode
++ date_generator **(_object_)**: date_generator for use next() in templates, default is `str(datetime.now())`.
 
-```
-<14>{{next(date_generator)}} {{ fake.random_element(('ABCDEFGHI01', 'ABCDEFGHI02')) }} firewall.cisco.asa: 2018-03-22T23:56:09.237067-07:00 : %ASA-123456: Teardown dynamic {{ fake.random_element(('TCP', 'UDP', 'ICMP')) }} translation from inside:{{ fake.ipv4() }}/{{ fake.int(1, 65000) }} to outside:{{ fake.ipv4() }}/{{ fake.int(1, 65000) }} duration 0:02:32
-<14>{{next(date_generator)}} {{ fake.random_element(('ABCDEFGHI01', 'ABCDEFGHI02')) }} firewall.cisco.asa: 2018-03-22T23:56:09.076432-07:00 : %ASA-654321: Built inbound {{ fake.random_element(('TCP', 'UDP', 'ICMP')) }} connection 1234567890 for outside:{{ fake.ipv4() }}/{{ fake.int(1, 65000) }} ({{ fake.ipv4() }}/{{ fake.int(1, 65000) }})(LOCAL\Chocolatero, Paquito) to inside:{{ fake.ipv4() }}/{{ fake.int(1, 65000) }} ({{ fake.ipv4() }}/{{ fake.int(1, 65000) }}) (Chocolatero, Paquito)
-```
+##### some examples
 
-We have used these methods:
-* datetime: We want sequential datetimes between the specified start_date and end_date, for this we
-have to use the special command {{next(date_generator)}}
-* hostnames: You can extract a list of hostnames from the original event sample or generate random ones, in
-this case I extracted them from the original sample and converted them to this command:  
-{{ fake.random_element(('ABCEFGHIJK', 'KJIHGFECBA')) }}
-* protocols: The same as with hostnames: {{ fake.random_element(('TCP', 'UDP', 'ICMP')) }}
-* ips: {{ fake.ipv4() }}
-* ports: {{ fake.int(1, 65000) }}
+Simple syslog faker generator, sending data using devo-sdk Sender:
 
-Another very useful command to generate more realistic data is the following:
-```
-{{ fake.random_element({"%ASA-654321": 0.8, "%ASA-123456": 0.18, "%ASA-111111": 0.02}) }}
-```
-It allows to specify the probability of each element. 
+Script:
 
-The faker library has many data providers but they have to be instantiated explicitly in the devo-faker 
+    from devoutils.faker import SyslogFakeGenerator
+    ....
+    con = Sender(config=config)
+    with open("test_template.jinja2", 'r') as myfile:
+        template = myfile.read()
+
+    sfg = SyslogFakeGenerator(engine=con, 
+                              template=template, 
+                              simulation=True,
+                              probability=75,
+                              frequency=(0.1, 5)
+                              verbose=True)
+    sfg.start()
+
+Template:
+
+    {#- Log -#}
+    {%- set type = fake.random_element(["post", "get"]) %}
+    {%- set nextdate = next(date_generator) -%}
+    {{ nextdate }} receiving {{ type }} request
+
+
+With the same template we can make more script examples:
+
+    sfg = SyslogFakeGenerator(engine=con, 
+                              template=template, 
+                              time_rules=[
+                                    {"rule": "0 8 * * *", "probability": 80,
+                                     "frequency": (0.5, 2)},
+                                    {"rule": "0 18 * * *", "probability": 50,
+                                     "frequency": (4, 10)}
+                                ])
+
+## Devo-utils providers
+
+
+The faker library has many data providers but they have to be instantiated explicitly in the devoutils.faker
 TemplateParser class:
 
 ```
@@ -144,38 +152,93 @@ class TemplateParser:
         self.fake.add_provider(InternetProvider)
 ```
 
-Right now lt-faker is configured to use two custom providers defined inside 
-lt-faker **FileDataSourceProvider** and **NumbersProvider** and a third provider from the third
+Right now lt-faker is configured to use two providers defined inside 
+**FileDataSourceProvider** and **NumbersProvider** and a third provider from the third
 party faker library: **InternetProvider**. If you want to add more add them there, the providers 
 of the faker library ar located in the faker.providers.* path and there are a lot of them!.
 
+You can use now in a template with `{{ fake.ipv4() }}`, `{{ fake.int(1, 65000) }}`
 
-Now that the template is done you can generate the event file with the following command:
+## Custom providers in script mode
 
-```
-devo-faker -t /location/of/your_template 
-    --batch_mode 
-    --date_range "2018-02-01 00:00:00" "2018-02-05 00:10:00" 
-    --freq 1-1000 
-    --prob 50 > out.log
-```
+In the fake generator, and in the templates you use, you can add any function / provider to generate data that you need, let's see a simple example
 
-The generated logs will be located inside the **eventbatch.log** file.
+    from devoutils.faker import SyslogFakeGenerator
+    from random import random # We import random function from python base
+    ....
+    con = Sender(config=config)
+    with open("test_template.jinja2", 'r') as myfile:
+        template = myfile.read()
+        
+    custom_providers = {"random" : random} # We need send all functions in a dictionary "name" -> function 
 
-You can use the **--freq** and **--prob** arguments to affect the way in which the events are generated.
+    sfg = SyslogFakeGenerator(engine=con, 
+                              template=template, 
+                              simulation=True,
+                              probability=75,
+                              frequency=(0.1, 5)
+                              verbose=True,
+                              providers=custom_providers)
+    sfg.start()
 
-**More template examples**
+And now we can use random function in template:
 
-Reusing the eventdate in other parts of the log:
-```
-{%- set eventdate = next(date_generator) -%}
-{{  eventdate }} {{ fake.ipv4() }} WEndpoint_Profile 1234567890 1 0 mac_address=10acbdefg01,ip_address={{ fake.ipv4() }},static_ip=t,hostname=DEVOHOSTNAME,username={{ 'USER%s' %fake.int(0, 9) }},login_status={{ fake.random_element({'ACCEPT': 0.4, 'REJECT': 0.1, 'TIMEOUT': 0.8}) }},error_code={{ fake.random_element((0, 106)) }}
-```
+    {#- Log -#}
+    {%- set type = fake.random_element(["post", "get"]) %}
+    {%- set nextdate = next(date_generator) -%}
+    {{ nextdate }} receiving {{ type }} request. Request duration: {{ random() }}
 
 
-## TODO
-- Add more useful methods to the jinja collection
-- Documentate news methods in Faker
-- Provide use examples in script
+You can import full modules or one full class, and use it in Jinja like you use in python:
 
-For more info talk with José Ramón
+    from devoutils.faker import SyslogFakeGenerator
+    import random # Now we import full random module
+    ....
+    con = Sender(config=config)
+    with open("test_template.jinja2", 'r') as myfile:
+        template = myfile.read()
+        
+    custom_providers = {"random" : random} 
+
+    sfg = SyslogFakeGenerator(engine=con, 
+                              template=template, 
+                              simulation=True,
+                              probability=75,
+                              frequency=(0.1, 5)
+                              verbose=True,
+                              providers=custom_providers)
+    sfg.start()
+
+And now we can use all module in template:
+    
+    #- Log -#}
+    {%- set type = fake.random_element(["post", "get"]) %}
+    {%- set nextdate = next(date_generator) -%}
+    {{ nextdate }} receiving {{ type }} request. Request duration: {{ random.random() }}. Request size {{ random.randint(0,100) }}
+
+You can send the number of own providers that you want, you just have create/import the functions, put them 
+in a dictionary and send them to "providers". 
+
+    providers={"random": random, "wifi_ssd": random_ssd_provider, "names": random_names_provider}
+
+## Third party providers
+In the official Python Faker documentation you have a list of the providers included in the base package, 
+and a list of providers created by other people:
+
+* [Standar providers](https://faker.readthedocs.io/en/stable/providers.html)
+* [Localized providers](https://faker.readthedocs.io/en/stable/locales.html#localized-providers)
+* [Community providers](https://faker.readthedocs.io/en/stable/communityproviders.html)
+
+
+## Important clarification in Jinja2
+
+If you wrap a line with the block creator
+
+    {% - set .... -%}
+
+Faker will not treat that line as a send line, if a variable is created without the hyphens, for example:
+
+    {% set .... %}
+
+Faker will believe that it is a line to send, so you have to keep this in mind
+

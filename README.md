@@ -1,6 +1,6 @@
 [![relese-next Build Status](https://travis-ci.com/DevoInc/python-utils.svg?branch=master)](https://travis-ci.com/DevoInc/python-utils) [![LICENSE](https://img.shields.io/dub/l/vibe-d.svg)](https://github.com/DevoInc/python-utils/blob/master/LICENSE)
 
-[![wheel](https://img.shields.io/badge/wheel-yes-brightgreen.svg)](https://pypi.org/project/devo-utils/) [![version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://pypi.org/project/devo-utils/) [![python](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7-blue.svg)](https://pypi.org/project/devo-utils/)
+[![wheel](https://img.shields.io/badge/wheel-yes-brightgreen.svg)](https://pypi.org/project/devo-utils/) [![version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://pypi.org/project/devo-utils/) [![python](https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue.svg)](https://pypi.org/project/devo-utils/)
 
 
 # Devo Python Utils
@@ -41,8 +41,18 @@ You can use sources files, clonning the project too:
 
 You have specific documentation in _[docs](docs)_ folder for each part of SDK:
 * [Faker: fake data](docs/faker.md)
-* [File IO](docs/io/fileio.md)
-* [Sorting data](docs/sorter.md)
+* [File IO](docs/fileio.md)
+* [Sorting data](docs/sorter.md)If you wrap a line with the block creator
+
+{% - set .... -%}
+
+Faker will not treat that line as a send line, if a variable is created without the hyphens, for example:
+
+{% set ....%}
+
+Faker will believe that it is a line to send, so you have to keep this in mind
+
+And examples in `examples` folder.
 
 
 ## Contributing
