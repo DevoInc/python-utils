@@ -5,11 +5,11 @@ from .realtime_fake_generator import RealtimeFakeGenerator
 
 class SyslogRawFakeGenerator(RealtimeFakeGenerator):
     """Generate a lot of events from/for Syslog"""
-    def __init__(self, engine, template, **kwargs):
+    def __init__(self, engine=None, template=None, **kwargs):
         RealtimeFakeGenerator.__init__(self, engine=engine, template=template,
                                        **kwargs)
 
-    def send_raw(self, message):
+    def send_raw(self, message=None):
         """Class to call function devo.sender.send_raw() with raw data"""
         if message[-1:] != "\n":
             message += "\n"

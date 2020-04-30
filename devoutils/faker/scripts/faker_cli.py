@@ -105,11 +105,7 @@ def cli(**kwargs):
     try:
         if cfg['simulation']:
             params.append('Simulation')
-            thread = SimulationFakeGenerator(cfg['template'],
-                                             interactive=cfg['interactive'],
-                                             probability=cfg['probability'],
-                                             frequency=cfg['frequency'],
-                                             providers=providers)
+            thread = SimulationFakeGenerator(providers=providers, **cfg)
         elif cfg['batch_mode']:
             params.append('Batch mode')
             start_date = parser.parse(cfg['date_range'][0])
@@ -117,33 +113,21 @@ def cli(**kwargs):
             click.echo('Generating events between {} and {}'.format(start_date,
                                                                     end_date),
                        file=sys.stderr)
-            thread = BatchFakeGenerator(
-                cfg['template'], start_date, end_date,
-                probability=cfg['probability'],
-                frequency=cfg['frequency'],
-                date_format=cfg['date_format'],
-                dont_remove_microseconds=cfg['dont_remove_microseconds'],
-                file_name=cfg.get('file_name', None),
-                providers=providers)
+            thread = BatchFakeGenerator(start_date=start_date,
+                                        end_date=end_date,
+                                        providers=providers,
+                                        **cfg)
         elif cfg['raw_mode']:
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
                                                 scfg.get("port", None)))
-            thread = SyslogRawFakeGenerator(engine, cfg.get('template', None),
-                                            interactive=cfg['interactive'],
-                                            probability=cfg['probability'],
-                                            frequency=cfg['frequency'],
+            thread = SyslogRawFakeGenerator(engine=engine,
                                             providers=providers,
-                                            verbose=cfg['verbose'])
+                                            **cfg)
         elif cfg.get('file_name', None):
             params.append('File Name {}'.format(cfg['file_name']))
-            thread = FileFakeGenerator(cfg['template'],
-                                       interactive=cfg['interactive'],
-                                       probability=cfg['probability'],
-                                       frequency=cfg['frequency'],
-                                       file_name=cfg['file_name'],
-                                       providers=providers,
-                                       verbose=cfg['verbose'])
+            thread = FileFakeGenerator(providers=providers,
+                                       **cfg)
         else:
             scfg = cfg['sender']
             params.append('Host={0}:{1}'.format(scfg.get('address', None),
@@ -154,14 +138,8 @@ def cli(**kwargs):
                                           )
                                   )
                           )
-            thread = SyslogFakeGenerator(engine, cfg['template'],
-                                         interactive=cfg['interactive'],
-                                         probability=cfg['probability'],
-                                         frequency=cfg['frequency'],
-                                         providers=providers,
-                                         tag=cfg.get("tag",
-                                                     "my.app.faker.test"),
-                                         verbose=cfg['verbose'])
+            thread = SyslogFakeGenerator(engine=engine,
+                                         **cfg)
 
         params.append('probability={0}'.format(cfg['probability']))
         params.append('frequency={0}'.format(cfg['frequency']))
