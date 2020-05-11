@@ -232,13 +232,17 @@ and a list of providers created by other people:
 
 ## Important clarification in Jinja2
 
-If you wrap a line with the block creator
+If you put a line with the block creator, after and before the %
 
-    {% - set .... -%}
+    {%- set .... -%}
 
-Faker will not treat that line as a send line, if a variable is created without the hyphens, for example:
+Faker will not treat that line as a line to send, only as a line with a variable, condition, etc. 
 
-    {% set .... %}
+if a variable is created without the hyphens, for example:
 
-Faker will believe that it is a line to send, so you have to keep this in mind
+    {% set myvar = 3 %}
+
+
+As Faker not see the hyphens, the template use this line like one event, soo, one line to send. You need 
+use ever the hyphens `-` to secure setters lines, or conditional lines, etc, are not send
 

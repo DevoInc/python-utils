@@ -4,11 +4,11 @@
 {%- set eventdate = next(date_generator) -%}
 {%- set ASA_ids = fake.random_element(("%ASA-6-302013", "%ASA-6-302013", "%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013","%ASA-6-302013", "%ASA-6-302014", "%ASA-6-302014", "%ASA-6-302014" "%ASA-6-419002")) -%}
 {%- set protocol = fake.random_element(('TCP', 'UDP')) -%}
-{%- set outside_ip = fake.random_element(("94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "4.2.23.1", "4.2.23.12", "4.2.23.13")) -%}
+{%- set outside_ip = fake.random_element(("192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.12", "192.2.23.13")) -%}
 {%- set outside_port = fake.int(1, 65000) -%}
-{%- set inside_ip = fake.random_element(("94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "94.2.23.1", "4.2.23.1", "4.2.23.12", "4.2.23.13")) -%}
+{%- set inside_ip = fake.random_element(("192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.1", "192.2.23.12", "192.2.23.13")) -%}
 {%- set inside_port = fake.int(1, 65000) -%}
 {#- Inbound connections -#}
-<14>{{ eventdate }} injection-eu-52.19.12.121 firewall.cisco.asa: 2018-03-22T23:56:09.076432-07:00 TESTEWHQMHF28 : {{ ASA_ids }}: Built inbound {{ protocol }} connection 684813185 for outside:{{ outside_ip }}/{{ outside_port }} ({{ outside_ip }}/{{ outside_port }})(LOCAL\BLAH, Sara) to inside:{{ inside_ip }}/{{ inside_port }} ({{ inside_ip }}/{{ inside_port }}) (Mostafavi, Sara)
+<14>{{ eventdate }} inj-eu-192.1.1.1 firewall.cisco.asa: 2018-03-22T23:56:09.076432-07:00 TESTEWHQMHF28 : {{ ASA_ids }}: Built inbound {{ protocol }} connection 684813185 for outside:{{ outside_ip }}/{{ outside_port }} ({{ outside_ip }}/{{ outside_port }})(LOCAL\BLAH, Fakename) to inside:{{ inside_ip }}/{{ inside_port }} ({{ inside_ip }}/{{ inside_port }}) (Name, Fake)
 {#- Denied connections -#}
 <14>{{ eventdate }} CVNARTGTA378701EF01 firewall.cisco_asa: 2018-03-22T23:56:02.255134-07:00 CVNARTGTA378701EF01 : {{ ASA_ids }}: Deny {{ protocol }} (no connection) from {{ outside_ip }}/{{ outside_port }} to {{ inside_ip }}/{{ inside_port }}flags ACK on interface inside
