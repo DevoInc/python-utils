@@ -28,7 +28,8 @@ class FileReader:
         mode = kwargs.get('mode', 'r')
         self.file_name = src_file
         self.__file_desc = gzip.open(src_file, mode + 't') if is_gzip else \
-            open(src_file, mode, newline='')
+            open(src_file, mode, newline='',
+                 encoding=kwargs.get("encoding", None))
         if self.__is_csv:
             self.__reader = csv.reader(self.__file_desc,
                                        delimiter=kwargs.get('delimiter', ','),

@@ -3,7 +3,7 @@ import unittest
 import re
 import os
 from dateutil import parser
-from devoutils.faker import BatchSender
+from devoutils.faker import BatchFakeGenerator
 from devoutils.faker import TemplateParser
 
 
@@ -11,7 +11,7 @@ class TestTemplateParser(unittest.TestCase):
     """Main class for tests"""
     def __init__(self, *args, **kwargs):
         super(TestTemplateParser, self).__init__(*args, **kwargs)
-        self.parser = TemplateParser()
+
 
     def setUp(self):
         os.chdir("{!s}{!s}".format(os.path.dirname(os.path.abspath(__file__)),
@@ -20,19 +20,22 @@ class TestTemplateParser(unittest.TestCase):
     def test_simple(self):
         with open("./template01") as content_file:
             text = content_file.read()
-        result = self.parser.process(text)
+        template_parser = TemplateParser(template=text)
+        result = template_parser.process(text)
         self.assertTrue(result == 'test1\ntest2')
 
     def test_with_faker(self):
         with open("./template02") as content_file:
             text = content_file.read()
-        result = self.parser.process(text)
+        template_parser = TemplateParser(template=text)
+        result = template_parser.process(text)
         self.assertTrue(re.match("test\d+", result))
 
     def test_with_faker_from_file(self):
         with open("./template03") as content_file:
             text = content_file.read()
-        result = self.parser.process(text)
+        template_parser = TemplateParser(template=text)
+        result = template_parser.process(text)
         self.assertTrue(re.match("test\d+", result))
 
     def test_with_faker_more_complicated(self):
@@ -40,12 +43,14 @@ class TestTemplateParser(unittest.TestCase):
             text = content_file.read()
         start_date = parser.parse("01-01-2018 00:00:00")
         end_date = parser.parse("01-01-2018 00:05:00")
-        result = self.parser.process(text,
-                                     date_generator=
-                                     BatchSender.date_range(start_date,
-                                                            end_date,
-                                                            (1, 10),
-                                                            50))
+
+        template_parser = TemplateParser(template=text)
+        result = \
+            template_parser.process(date_generator=
+                                    BatchFakeGenerator.date_range(start_date,
+                                                                  end_date,
+                                                                  (1, 10),
+                                                                  50))
         self.assertTrue('test' in result)
 
 

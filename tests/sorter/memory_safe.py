@@ -3,19 +3,17 @@ import string
 import random
 import datetime
 import os
-import sys
 import re
 from devoutils.sorter import Sorter, compare_num, compare_date, parser_regex, \
     parser_delimiter
 
-PY3 = sys.version_info[0] >= 3
 RE_D5 = r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{5})"
 RE_D56 = r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6})"
 RE_D6 = r"(\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}\.\d{6})"
 
 
 def to_str(my_str):
-    return str(my_str).encode("utf-8") if PY3 else str(my_str)
+    return str(my_str).encode("utf-8")
 
 
 def _random_date():

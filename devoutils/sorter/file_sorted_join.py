@@ -5,7 +5,7 @@ Module with classes for file management
 - Reader and join of several ordered files
 """
 import os
-from .file_reader import FileReader
+from devoutils.fileio.file_reader import FileReader
 
 
 class FileSortedJoin:

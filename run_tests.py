@@ -40,7 +40,7 @@ def run_test_suite():
     return failed
 
 
-class CoverageCommand():
+class CoverageCommand:
     """setup.py command to run code coverage of the test suite."""
     def run(self):
         try:
@@ -55,7 +55,7 @@ class CoverageCommand():
         cov.html_report(directory='coverage_report')
 
 
-class TestCommand():
+class TestCommand:
     def run(self):
         """setup.py command to run the whole test suite."""
         failed = run_test_suite()

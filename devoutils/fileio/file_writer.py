@@ -28,7 +28,8 @@ class FileWriter:
                                                               False)
 
         self.__file_desc = gzip.open(dest_file, mode + 't') if is_gzip \
-            else open(dest_file, mode, newline='')
+            else open(dest_file, mode, newline='',
+                      encoding=kwargs.get("encoding", None))
         if self.__is_csv:
             self.__writer = csv.writer(self.__file_desc,
                                        delimiter=kwargs.get('delimiter', ','),
