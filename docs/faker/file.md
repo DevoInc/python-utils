@@ -43,3 +43,14 @@ Template:
     {%- set type = fake.random_element(["post", "get"]) -%}
     {{ next(date_generator) }} receiving {{ type }} request.
     {%- set a = 3 -%}
+
+### CLI Usage
+
+You can use this generator with the option `--file_name 'name_if_file.txt`
+
+
+    devo-faker --template "~/python-utils/examples/simple_cli_example.jinja2" --config "config.yaml" --file_name "example.txt"
+    
+This `--file_name` if is used with flag `--batch_mode` is used in BatchFakeGenerator
+
+You have more info, flags and options in [Terminal/Shell CLI usage](shellcli.md)

@@ -43,6 +43,26 @@ Template:
     {%- set type = fake.random_element(["post", "get"]) -%}
     {{ next(date_generator) }} receiving {{ type }} request.
     {%- set a = 3 -%}
+    
+    
+### CLI Usage
+
+You can use this generator without any flags. Its the default execution of cli shell
+
+
+    devo-faker --template "~/python-utils/examples/simple_syslog_template.jinja2" --config "config.yaml"
+    
+config.yaml:
+
+    faker:
+      probability: 80
+      frequency: (2,5)
+    sender:
+      *devo-sdk configuration
+
+
+You have more info, flags and options in [Terminal/Shell CLI usage](shellcli.md)
+
 
 
 ## Raw syslog fake generator
@@ -61,3 +81,22 @@ create the data, in your template you will need to generate the entire line to s
 This generator does not need the tag, since you add it in the headers
 
     <14>Jan  1 00:00:00 MacBook-Pro-de-X.local my.app.devo_sender.test: my data
+
+
+### CLI Usage
+
+You can use this generator with the option `--raw_mode`
+
+
+    devo-faker --template "~/python-utils/examples/simple_syslog_template.jinja2" --config "config.yaml" --raw_mode
+    
+config.yaml:
+
+    faker:
+      probability: 80
+      frequency: (2,5)
+    sender:
+      *devo-sdk configuration
+
+
+You have more info, flags and options in [Terminal/Shell CLI usage](shellcli.md)

@@ -28,11 +28,6 @@ Options:
   --address TEXT               address to send.
   --port TEXT                  Port to send.
   --tag TEXT                   Tag from Devo.
-  --file_name TEXT             File name to store events. If file name exist
-                               will only store the events in a file. Can be
-                               used with batch mode to set the file where
-                               store the batch events
-
   --simulation                 Set as simulation. Shows the event in the
                                console, but do not send it
 
@@ -40,6 +35,11 @@ Options:
   -p, --providers FILENAME     File with custom providers dict.
   -i, --interactive            Interactive mode.
   -raw, --raw_mode             Send raw mode.
+  --file_name TEXT             Use File Fake Generator.File name to store
+                               events. If file name exist will only store the
+                               events in a file. Can be used with batch mode
+                               to set the file where store the batch events
+
   --probability INTEGER        Probability (0-100).
   --frequency TEXT             Frequency in seconds. Example: "1.0-5.0" =
                                random time between 1 sec. to 5secs.
@@ -65,6 +65,13 @@ Options:
   --help                       Show this message and exit.
 ```
 
+
+You can use all the flags/values in a config file, using the name of the flags with two "-"
+For example, for `-raw, --raw_mode` you need use in config file the value `raw_mode`
+for `-i, --interactive`, `interactive`, etc.
+
+And all values into one object called "faker" in the main level:
+
 The config.json file could be like this:
 ```
 {
@@ -76,9 +83,13 @@ The config.json file could be like this:
         "address": "eu.elb.relay.logtrust.net",
         "port": 443
    },
-    "verbose": true,
-    "probability": 80,
-    "frequency": (2,4)
+   "faker"{
+        "verbose": true,
+        "probability": 80,
+        "frequency": (2,4),
+        "interactive": true,
+        "template": "/path/to/template.file"
+    }
 }
 ```
 
@@ -91,8 +102,10 @@ sender:
     tag: "test.keep.free",
     address: "eu.elb.relay.logtrust.net",
     port: 443
-simulation: true
-probability: 50
-frequency: (1,3)
-providers: providers.py
+faker:
+    simulation: true
+    probability: 50
+    batch_mode: true
+    dont_remove_microseconds: true
+    providers: providers.py
 ```

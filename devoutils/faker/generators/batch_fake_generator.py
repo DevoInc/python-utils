@@ -83,7 +83,7 @@ class BatchFakeGenerator(BaseFakeGenerator):
 
         counter = 0
         date_generator = self.date_range(
-            self._start_date, self._end_date, self.frequency, self.probability,
+            self._start_date, self._end_date, self.freq, self.prob,
             self.date_format, self.dont_remove_microseconds)
         with open(self.file_name, "w") as f:
             while True:

@@ -12,7 +12,13 @@ to generate much more data from the original sample.
 
 The batch mode allows to generate events between two arbitrary dates as fast 
 as possible. The events will be dumped to the standard output and then you can
-redirect it to a file or somewhere else
+redirect it to a file or somewhere else.
+
+
+You can generate raw or normal data, and when you have the file send with devo-sdk
+using the normal mode, or the raw mode. For this type of documents, when you want
+to generate much amount of data, the mor usefull is generate raw data and send it with
+raw mode in devo-sdk
 
 First we want to take the sample events and create a template from them. For
 example, if we have these sample events:
@@ -71,3 +77,22 @@ Reusing the eventdate in other parts of the log:
 {%- set eventdate = next(date_generator) -%}
 {{  eventdate }} {{ fake.ipv4() }} WEndpoint_Profile 1234567890 1 0 mac_address=10acbdefg01,ip_address={{ fake.ipv4() }},static_ip=t,hostname=DEVOHOSTNAME,username={{ 'USER%s' %fake.int(0, 9) }},login_status={{ fake.random_element({'ACCEPT': 0.4, 'REJECT': 0.1, 'TIMEOUT': 0.8}) }},error_code={{ fake.random_element((0, 106)) }}
 ```
+
+### CLI Usage
+
+You can use this generator with the option `--batch_mode`
+
+
+    devo-faker --template "~/python-utils/examples/simple_cli_example.jinja2" --config "config.yaml" --batch_mode
+    
+config.yaml:
+
+    faker:
+      probability: 80
+      frequency: (2,5)
+      date_range: ("2020-01-01 00:00:00", "2020-01-02 00:00:00")
+      file_name: "example_batch.txt"
+
+
+
+You have more info, flags and options in [Terminal/Shell CLI usage](shellcli.md)

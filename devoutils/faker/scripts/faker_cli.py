@@ -33,10 +33,6 @@ def cli():
 @click.option('--address', help='address to send.')
 @click.option('--port', help='Port to send.')
 @click.option('--tag', help='Tag from Devo.')
-@click.option('--file_name', help='File name to store events. If file name '
-              'exist will only store the events in a file. Can be used '
-              'with batch mode to set the file where store the batch '
-              'events')
 @click.option('--simulation', is_flag=True,
               help='Set as simulation. Shows the event in the console, '
                    'but do not send it')
@@ -48,6 +44,11 @@ def cli():
               help='Interactive mode.')
 @click.option('--raw_mode', '-raw', is_flag=True,
               help='Send raw mode.')
+@click.option('--file_name', help='Use File Fake Generator.'
+                                  'File name to store events. If file name '
+              'exist will only store the events in a file. Can be used '
+              'with batch mode to set the file where store the batch '
+              'events')
 @click.option('--probability', default=100, help='Probability (0-100).')
 @click.option('--frequency', default="1-1", help='Frequency in seconds. '
                                                  'Example: '
@@ -91,13 +92,13 @@ def cli(**kwargs):
             spec.loader.exec_module(module)
             get_providers = getattr(module, provcfg.get("getter"))
             providers = get_providers()
+            cfg.__delitem__("providers")
     except Exception as error:
         print_error("Error when loading Providers", show_help=False,
                     stop=False)
         print_error(error, show_help=False, stop=True)
 
     params = []
-
     click.echo("» Press Ctrl+C to stop the process «", file=sys.stderr)
     if cfg['interactive']:
         click.echo("» Interactive mode «")

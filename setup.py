@@ -24,11 +24,10 @@ CLASSIFIERS = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-INSTALL_REQUIRES = ['devo-sdk==3.3.0',
+INSTALL_REQUIRES = ['devo-sdk==3.3.2',
                     'click==7.1.1',
                     'requests==2.23.0',
                     'PyYAML==5.3.1',
-                    'devo-sdk==3.3.0',
                     'Jinja2==2.11.1',
                     'psutil==5.7.0',
                     'python-dateutil==2.8.1',
