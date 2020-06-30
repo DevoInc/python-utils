@@ -5,9 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [3.0.1] - 2020-06-30
-#### Added
- * Sorter now accept file encoding for write/read
  
+#### Fixed
+ * Sorter regex parser now accept group != 0
 
 ## [3.0.0] - 2020-04-28
 #### Added 
@@ -27,9 +27,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     * Update dependencies to a new majors versions
     * Set dependencies to fixed versions (more maintenance, but much more security and reliability)
  * Sorter
+    * Sorter now accept file encoding for write/read
     * file_sorted_join moved from devoutils.sorter to devoutils.fileio
     * Remove Python 2 compatibility
-    * Sorter regex parser now accept group != 0
  * Faker
     * Faker cli add verbose mode to show the events in the console
     * Add file_name param to define a file to store events in batch mode or 
