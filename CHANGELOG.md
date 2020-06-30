@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 #### Added
  * Sorter now accept file encoding for write/read
  
-#### Fixed
- * Sorter regex parser now accept group != 0
 
 ## [3.0.0] - 2020-04-28
 #### Added 
@@ -31,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  * Sorter
     * file_sorted_join moved from devoutils.sorter to devoutils.fileio
     * Remove Python 2 compatibility
+    * Sorter regex parser now accept group != 0
  * Faker
     * Faker cli add verbose mode to show the events in the console
     * Add file_name param to define a file to store events in batch mode or 
