@@ -36,6 +36,11 @@ def parser_regex(regex, group, ignorecase=False):
     :param ignorecase: False by default
     :return: the group obtained.
     """
-    if ignorecase:
-        return lambda x: re.search(regex, x, re.I).groups()[group]
-    return lambda x: re.search(regex, x).groups()[group]
+    if group == 0:
+        if ignorecase:
+            return lambda x: re.search(regex, x, re.I).groups()[group]
+        return lambda x: re.search(regex, x).groups()[group]
+    else:
+        if ignorecase:
+            return lambda x: re.findall(regex, x, re.I)[group]
+        return lambda x: re.findall(regex, x)[group]
