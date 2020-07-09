@@ -104,6 +104,8 @@ class Sorter:
         writer = FileWriter(dst_file, **kwargs)
         for line in data:
             if line:
+                if not line.endswith("\n"):
+                    line = line + "\n"
                 writer.write(line)
 
     def __read_and_sort(self, src_type, src, kwargs):
