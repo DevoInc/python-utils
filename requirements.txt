@@ -1,6 +1,6 @@
 click==7.1.1
 requests==2.23.0
-PyYAML==5.3.1
+PyYAML==5.4.1
 devo-sdk==3.4.1
 Jinja2==2.11.3
 psutil==5.7.0
