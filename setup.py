@@ -24,7 +24,7 @@ CLASSIFIERS = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-INSTALL_REQUIRES = ['devo-sdk==3.4.1',
+INSTALL_REQUIRES = ['devo-sdk==3.4.2',
                     'click==7.1.1',
                     'requests==2.23.0',
                     'PyYAML==5.4.1',
