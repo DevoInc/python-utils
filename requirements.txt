@@ -1,4 +1,4 @@
-click==7.1.1
+click==8.1.2
 requests==2.23.0
 PyYAML==5.4.1
 devo-sdk==3.4.2
